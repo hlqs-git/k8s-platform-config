@@ -1,0 +1,25 @@
+# Plaintext secrets and credentials
+*.key
+*.pem
+*.p12
+*.pfx
+*.kubeconfig
+kubeconfig
+*.env
+.env
+.env.*
+!*.env.example
+
+# SOPS temporary/decrypted files
+*.dec.yaml
+*.decrypted.yaml
+
+# Local tooling
+.idea/
+.vscode/
+*.swp
+*.tmp
+
+# Operating systems
+.DS_Store
+Thumbs.db
