@@ -60,3 +60,21 @@ rules:
       - update
       - patch
       - delete
+
+  # Legacy workload resources
+  - apiGroups: [""]
+    resources:
+      - replicationcontrollers
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Autoscaling resources
+  - apiGroups: ["autoscaling"]
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - get
+      - list
+      - watch
