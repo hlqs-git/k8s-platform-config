@@ -5,19 +5,15 @@ metadata:
   labels:
     managed-by: gitops
 rules:
+  # Core resources
   - apiGroups: [""]
     resources:
       - pods
       - pods/log
-      - pods/exec
-      - pods/portforward
-      - jobs
-      - cronjobs
-      - secrets
-      - persistentvolumeclaims
-      - events
       - services
       - configmaps
+      - persistentvolumeclaims
+      - events
     verbs:
       - get
       - list
@@ -27,12 +23,35 @@ rules:
       - patch
       - delete
 
+  # Pod operations
+  - apiGroups: [""]
+    resources:
+      - pods/exec
+      - pods/portforward
+    verbs:
+      - create
+
+  # Workloads
   - apiGroups: ["apps"]
     resources:
       - deployments
       - replicasets
       - statefulsets
       - daemonsets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  # Batch workloads
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
     verbs:
       - get
       - list
