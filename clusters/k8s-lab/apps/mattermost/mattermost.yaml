@@ -1,0 +1,49 @@
+apiVersion: installation.mattermost.com/v1beta1
+kind: Mattermost
+metadata:
+  name: mattermost
+  namespace: mattermost
+spec:
+  mattermostEnv:
+    - name: MM_FILESETTINGS_AMAZONS3SSL
+      value: "false"
+
+    - name: MM_SERVICESETTINGS_SITEURL
+      value: "https://mm.gmyj.org"
+
+    - name: MM_EMAILSETTINGS_SENDPUSHNOTIFICATIONS
+      value: "true"
+  
+    - name: MM_EMAILSETTINGS_PUSHNOTIFICATIONSERVER
+      value: "https://push-test.mattermost.com"
+  
+    - name: MM_EMAILSETTINGS_PUSHNOTIFICATIONCONTENTS
+      value: "full"
+  
+  replicas: 1
+
+  database:
+    external:
+      secret: mattermost-db
+
+  fileStore:
+    external:
+      url: 192.168.13.210:9000
+      bucket: mattermost
+      secret: mattermost-minio
+
+  probes:
+    livenessProbe:
+      initialDelaySeconds: 300
+      timeoutSeconds: 5
+      periodSeconds: 10
+      failureThreshold: 6
+
+    readinessProbe:
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+      periodSeconds: 5
+      failureThreshold: 60
+
+  ingress:
+    enabled: false

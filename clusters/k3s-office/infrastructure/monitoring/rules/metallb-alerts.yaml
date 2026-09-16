@@ -1,0 +1,70 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: metallb-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: metallb.rules
+      rules:
+        - alert: MetalLBAddressPoolLow
+          expr: |
+            (
+              metallb_allocator_addresses_total
+              -
+              metallb_allocator_addresses_in_use_total
+            ) <= 2
+            and
+            (
+              metallb_allocator_addresses_total
+              -
+              metallb_allocator_addresses_in_use_total
+            ) > 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "MetalLB 地址池剩余 IP 较少"
+            description: "MetalLB 地址池 {{ $labels.pool }} 剩余可用 IP 仅为 {{ printf \"%.0f\" $value }} 个，请关注地址池容量。"
+
+        - alert: MetalLBAddressPoolExhausted
+          expr: |
+            (
+              metallb_allocator_addresses_total
+              -
+              metallb_allocator_addresses_in_use_total
+            ) <= 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MetalLB 地址池已耗尽"
+            description: "MetalLB 地址池 {{ $labels.pool }} 已没有可用 IP，新建 LoadBalancer Service 可能无法获取地址。"
+
+        - alert: MetalLBConfigNotLoaded
+          expr: metallb_k8s_client_config_loaded_bool == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MetalLB 配置未成功加载"
+            description: "MetalLB 组件 {{ $labels.pod }} 尚未成功加载有效配置，请检查 MetalLB 配置和组件日志。"
+
+        - alert: MetalLBConfigStale
+          expr: metallb_k8s_client_config_stale_bool == 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MetalLB 正在使用旧配置"
+            description: "MetalLB 组件 {{ $labels.pod }} 无法加载最新配置，目前正在继续使用旧配置，请检查最近的 MetalLB 配置变更。"
+
+        - alert: MetalLBConfigUpdateErrorsDetected
+          expr: increase(metallb_k8s_client_update_errors_total[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "MetalLB 配置更新出现错误"
+            description: "MetalLB 组件 {{ $labels.pod }} 在最近 10 分钟出现配置更新错误，新增错误数约为 {{ printf \"%.0f\" $value }}。"

@@ -1,0 +1,8 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: juicefs-postgres-backup-now
+  namespace: postgres
+spec:
+  cluster:
+    name: juicefs-postgres

@@ -1,0 +1,18 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: mattermost-postgres
+  namespace: mattermost
+spec:
+  instances: 1
+
+  bootstrap:
+    initdb:
+      database: mattermost
+      owner: mattermost
+      secret:
+        name: mattermost-postgres-user
+
+  storage:
+    storageClass: juicefs-sc
+    size: 20Gi

@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: k3s-wildcard-cert
+  namespace: default
+spec:
+  secretName: k3s-wildcard-tls
+
+  issuerRef:
+    name: letsencrypt-alidns-prod
+    kind: ClusterIssuer
+
+  dnsNames:
+    - "k3s.hlqs.top"
+    - "*.k3s.hlqs.top"

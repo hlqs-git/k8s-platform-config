@@ -1,0 +1,339 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-cert-manager-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-cert-manager-overview.json: "{\n  \"id\": null,\n  \"uid\": \"custom-cert-manager-overview\"\
+    ,\n  \"title\": \"Custom - cert-manager Overview\",\n  \"tags\": [\n    \"custom\"\
+    ,\n    \"cert-manager\",\n    \"certificate\",\n    \"tls\"\n  ],\n  \"timezone\"\
+    : \"browser\",\n  \"schemaVersion\": 41,\n  \"version\": 2,\n  \"refresh\": \"\
+    30s\",\n  \"time\": {\n    \"from\": \"now-6h\",\n    \"to\": \"now\"\n  },\n\
+    \  \"templating\": {\n    \"list\": [\n      {\n        \"name\": \"DS_PROMETHEUS\"\
+    ,\n        \"type\": \"datasource\",\n        \"label\": \"Prometheus\",\n   \
+    \     \"query\": \"prometheus\",\n        \"current\": {}\n      }\n    ]\n  },\n\
+    \  \"panels\": [\n    {\n      \"id\": 1,\n      \"type\": \"stat\",\n      \"\
+    title\": \"Metrics Targets Up\",\n      \"datasource\": {\n        \"type\": \"\
+    prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(up{namespace=\\\
+    \"cert-manager\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n   \
+    \   \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\
+    \n        },\n        \"overrides\": []\n      },\n      \"options\": {\n    \
+    \    \"reduceOptions\": {\n          \"values\": false,\n          \"calcs\":\
+    \ [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 2,\n      \"type\": \"stat\",\n      \"title\": \"Unhealthy Targets\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 4,\n  \
+    \      \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"count(up{namespace=\\\"cert-manager\\\"\
+    } == 0) or vector(0)\",\n          \"refId\": \"A\"\n        }\n      ],\n   \
+    \   \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\
+    ,\n          \"thresholds\": {\n            \"mode\": \"absolute\",\n        \
+    \    \"steps\": [\n              {\n                \"color\": \"green\",\n  \
+    \              \"value\": null\n              },\n              {\n          \
+    \      \"color\": \"yellow\",\n                \"value\": 1\n              },\n\
+    \              {\n                \"color\": \"red\",\n                \"value\"\
+    : 2\n              }\n            ]\n          },\n          \"color\": {\n  \
+    \          \"mode\": \"thresholds\"\n          }\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 3,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Certificates Ready\",\n      \"datasource\": {\n       \
+    \ \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 8,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(certmanager_certificate_ready_status{job=\\\"cert-manager\\\",condition=\\\
+    \"True\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 4,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Certificates Not Ready\",\n      \"datasource\": {\n   \
+    \     \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n     \
+    \ },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 0,\n        \"\
+    w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n       \
+    \   \"expr\": \"sum(certmanager_certificate_ready_status{job=\\\"cert-manager\\\
+    \",condition=\\\"False\\\"})\",\n          \"refId\": \"A\"\n        }\n     \
+    \ ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"\
+    short\",\n          \"thresholds\": {\n            \"mode\": \"absolute\",\n \
+    \           \"steps\": [\n              {\n                \"color\": \"green\"\
+    ,\n                \"value\": null\n              },\n              {\n      \
+    \          \"color\": \"yellow\",\n                \"value\": 1\n            \
+    \  },\n              {\n                \"color\": \"red\",\n                \"\
+    value\": 2\n              }\n            ]\n          },\n          \"color\"\
+    : {\n            \"mode\": \"thresholds\"\n          }\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 5,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Issuers Ready\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 16,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(certmanager_issuer_ready_status{job=\\\
+    \"cert-manager\\\",condition=\\\"True\\\"})\",\n          \"refId\": \"A\"\n \
+    \       }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n     \
+    \     \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n \
+    \     \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 6,\n      \"type\": \"stat\",\n      \"title\":\
+    \ \"ClusterIssuers Ready\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 20,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"sum(certmanager_clusterissuer_ready_status{job=\\\
+    \"cert-manager\\\",condition=\\\"True\\\"})\",\n          \"refId\": \"A\"\n \
+    \       }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n     \
+    \     \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n \
+    \     \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 7,\n      \"type\": \"stat\",\n      \"title\":\
+    \ \"Minimum Certificate Days Left\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 6,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"min((certmanager_certificate_expiration_timestamp_seconds{job=\\\
+    \"cert-manager\\\"} - time()) / 86400)\",\n          \"refId\": \"A\"\n      \
+    \  }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"\
+    unit\": \"none\",\n          \"decimals\": 1,\n          \"thresholds\": {\n \
+    \           \"mode\": \"absolute\",\n            \"steps\": [\n              {\n\
+    \                \"color\": \"red\",\n                \"value\": null\n      \
+    \        },\n              {\n                \"color\": \"yellow\",\n       \
+    \         \"value\": 30\n              },\n              {\n                \"\
+    color\": \"green\",\n                \"value\": 60\n              }\n        \
+    \    ]\n          },\n          \"color\": {\n            \"mode\": \"thresholds\"\
+    \n          }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\",\n        \"graphMode\": \"none\"\
+    ,\n        \"colorMode\": \"value\"\n      }\n    },\n    {\n      \"id\": 8,\n\
+    \      \"type\": \"stat\",\n      \"title\": \"Certificates Expiring < 30d\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 6,\n  \
+    \      \"y\": 4,\n        \"w\": 6,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"count(((certmanager_certificate_expiration_timestamp_seconds{job=\\\
+    \"cert-manager\\\"} - time()) / 86400) < 30) or vector(0)\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\",\n          \"thresholds\": {\n           \
+    \ \"mode\": \"absolute\",\n            \"steps\": [\n              {\n       \
+    \         \"color\": \"green\",\n                \"value\": null\n           \
+    \   },\n              {\n                \"color\": \"yellow\",\n            \
+    \    \"value\": 1\n              },\n              {\n                \"color\"\
+    : \"red\",\n                \"value\": 2\n              }\n            ]\n   \
+    \       },\n          \"color\": {\n            \"mode\": \"thresholds\"\n   \
+    \       }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 9,\n      \"type\": \"stat\",\n      \"title\": \"Certificates Expiring\
+    \ < 7d\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n      \
+    \  \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\"\
+    : 12,\n        \"y\": 4,\n        \"w\": 6,\n        \"h\": 4\n      },\n    \
+    \  \"targets\": [\n        {\n          \"expr\": \"count(((certmanager_certificate_expiration_timestamp_seconds{job=\\\
+    \"cert-manager\\\"} - time()) / 86400) < 7) or vector(0)\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\",\n          \"thresholds\": {\n           \
+    \ \"mode\": \"absolute\",\n            \"steps\": [\n              {\n       \
+    \         \"color\": \"green\",\n                \"value\": null\n           \
+    \   },\n              {\n                \"color\": \"yellow\",\n            \
+    \    \"value\": 1\n              },\n              {\n                \"color\"\
+    : \"red\",\n                \"value\": 2\n              }\n            ]\n   \
+    \       },\n          \"color\": {\n            \"mode\": \"thresholds\"\n   \
+    \       }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 10,\n      \"type\": \"stat\",\n      \"title\": \"Controller Sync Error\
+    \ Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n      \
+    \  \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\"\
+    : 18,\n        \"y\": 4,\n        \"w\": 6,\n        \"h\": 4\n      },\n    \
+    \  \"targets\": [\n        {\n          \"expr\": \"sum(rate(certmanager_controller_sync_error_count{job=\\\
+    \"cert-manager\\\"}[$__rate_interval]))\",\n          \"refId\": \"A\"\n     \
+    \   }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n         \
+    \ \"unit\": \"ops\",\n          \"decimals\": 4\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 11,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"Certificate Days Until Expiry\",\n      \"datasource\":\
+    \ {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 8,\n      \
+    \  \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n \
+    \         \"expr\": \"(certmanager_certificate_expiration_timestamp_seconds{job=\\\
+    \"cert-manager\\\"} - time()) / 86400\",\n          \"legendFormat\": \"{{exported_namespace}}\
+    \ / {{name}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n     \
+    \   \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 12,\n      \"type\": \"timeseries\",\n      \"title\": \"Certificate\
+    \ Days Until Renewal\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"(certmanager_certificate_renewal_timestamp_seconds{job=\\\
+    \"cert-manager\\\"} - time()) / 86400\",\n          \"legendFormat\": \"{{exported_namespace}}\
+    \ / {{name}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"none\"\n        },\n     \
+    \   \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 13,\n      \"type\": \"timeseries\",\n      \"title\": \"Certificate\
+    \ Ready Status\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 0,\n        \"y\": 16,\n        \"w\": 12,\n        \"h\": 8\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"certmanager_certificate_ready_status{job=\\\
+    \"cert-manager\\\",condition=\\\"True\\\"}\",\n          \"legendFormat\": \"\
+    {{exported_namespace}} / {{name}}\",\n          \"refId\": \"A\"\n        }\n\
+    \      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\"\
+    : \"short\"\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"legend\": {\n          \"displayMode\": \"list\",\n          \"\
+    placement\": \"bottom\",\n          \"calcs\": []\n        },\n        \"tooltip\"\
+    : {\n          \"mode\": \"multi\",\n          \"sort\": \"none\"\n        }\n\
+    \      }\n    },\n    {\n      \"id\": 14,\n      \"type\": \"timeseries\",\n\
+    \      \"title\": \"Issuer Ready Status\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 12,\n        \"y\": 16,\n        \"w\": 12,\n\
+    \        \"h\": 8\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"certmanager_issuer_ready_status{job=\\\"cert-manager\\\",condition=\\\"True\\\
+    \"}\",\n          \"legendFormat\": \"{{exported_namespace}} / {{name}}\",\n \
+    \         \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n  \
+    \      \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 15,\n      \"type\": \"timeseries\",\n      \"title\": \"ClusterIssuer\
+    \ Ready Status\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 0,\n        \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"certmanager_clusterissuer_ready_status{job=\\\
+    \"cert-manager\\\",condition=\\\"True\\\"}\",\n          \"legendFormat\": \"\
+    {{name}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 16,\n      \"type\": \"timeseries\",\n      \"title\": \"Controller\
+    \ Sync Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n \
+    \       \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n      \
+    \  \"x\": 12,\n        \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (controller)\
+    \ (rate(certmanager_controller_sync_call_count{job=\\\"cert-manager\\\"}[$__rate_interval]))\"\
+    ,\n          \"legendFormat\": \"{{controller}}\",\n          \"refId\": \"A\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"ops\"\n        },\n        \"overrides\": []\n      },\n \
+    \     \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 17,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Controller Sync Errors\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 32,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum by (controller) (rate(certmanager_controller_sync_error_count{job=\\\
+    \"cert-manager\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"{{controller}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 18,\n      \"type\": \"timeseries\",\n      \"title\": \"CA Injector\
+    \ Reconcile Errors\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 32,\n        \"w\": 12,\n        \"h\": 8\n \
+    \     },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (controller)\
+    \ (rate(controller_runtime_reconcile_errors_total{job=\\\"cainjector\\\"}[$__rate_interval]))\"\
+    ,\n          \"legendFormat\": \"{{controller}}\",\n          \"refId\": \"A\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"ops\"\n        },\n        \"overrides\": []\n      },\n \
+    \     \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 19,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"ACME Request Rate\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 40,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum by (action,status) (rate(certmanager_http_acme_client_request_count{job=\\\
+    \"cert-manager\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"{{action}}\
+    \ | {{status}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 20,\n      \"type\": \"timeseries\",\n      \"title\": \"ACME Request\
+    \ Average Latency\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 40,\n        \"w\": 12,\n        \"h\": 8\n \
+    \     },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (action)\
+    \ (\\n  rate(certmanager_http_acme_client_request_duration_seconds_sum{job=\\\"\
+    cert-manager\\\"}[$__rate_interval])\\n)\\n/\\nclamp_min(\\n  sum by (action)\
+    \ (\\n    rate(certmanager_http_acme_client_request_duration_seconds_count{job=\\\
+    \"cert-manager\\\"}[$__rate_interval])\\n  ),\\n  0.000001\\n)\",\n          \"\
+    legendFormat\": \"{{action}}\",\n          \"refId\": \"A\"\n        }\n     \
+    \ ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"\
+    s\"\n        },\n        \"overrides\": []\n      },\n      \"options\": {\n \
+    \       \"legend\": {\n          \"displayMode\": \"list\",\n          \"placement\"\
+    : \"bottom\",\n          \"calcs\": []\n        },\n        \"tooltip\": {\n \
+    \         \"mode\": \"multi\",\n          \"sort\": \"none\"\n        }\n    \
+    \  }\n    },\n    {\n      \"id\": 21,\n      \"type\": \"timeseries\",\n    \
+    \  \"title\": \"Webhook Request Rate\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 48,\n        \"w\": 12,\n        \"h\"\
+    : 8\n      },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (webhook,code)\
+    \ (rate(controller_runtime_webhook_requests_total{job=\\\"webhook\\\"}[$__rate_interval]))\"\
+    ,\n          \"legendFormat\": \"{{webhook}} | {{code}}\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"ops\"\n        },\n        \"overrides\": []\n    \
+    \  },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 22,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Webhook Inflight Requests\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 48,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum by (webhook) (controller_runtime_webhook_requests_in_flight{job=\\\
+    \"webhook\\\"})\",\n          \"legendFormat\": \"{{webhook}}\",\n          \"\
+    refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\"\
+    : {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 23,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Webhook Panics\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 56,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum(rate(controller_runtime_webhook_panics_total{job=\\\
+    \"webhook\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Webhook Panics\"\
+    ,\n          \"refId\": \"A\"\n        },\n        {\n          \"expr\": \"sum(rate(controller_runtime_conversion_webhook_panics_total{job=\\\
+    \"webhook\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Conversion\
+    \ Panics\",\n          \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 24,\n      \"type\": \"timeseries\",\n      \"title\": \"cert-manager\
+    \ Target Health\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 56,\n        \"w\": 12,\n        \"h\": 8\n \
+    \     },\n      \"targets\": [\n        {\n          \"expr\": \"up{namespace=\\\
+    \"cert-manager\\\"}\",\n          \"legendFormat\": \"{{job}} | {{pod}}\",\n \
+    \         \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n  \
+    \      \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    }\n  ]\n}"

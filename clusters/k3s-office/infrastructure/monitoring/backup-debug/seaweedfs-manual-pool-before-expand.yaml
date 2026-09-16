@@ -1,0 +1,28 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"metallb.io/v1beta1","kind":"IPAddressPool","metadata":{"annotations":{},"name":"seaweedfs-manual-pool","namespace":"metallb-system"},"spec":{"addresses":["192.168.13.210/32","192.168.13.211/32"]}}
+  creationTimestamp: "2026-07-02T02:59:51Z"
+  generation: 7
+  name: seaweedfs-manual-pool
+  namespace: metallb-system
+  resourceVersion: "33013367"
+  uid: 53f0ba47-669a-4284-a25a-5afb8a4647d3
+spec:
+  addresses:
+  - 192.168.13.210/32
+  - 192.168.13.211/32
+  - 192.168.13.212/32
+  - 192.168.13.213/32
+  - 192.168.13.214/32
+  - 192.168.13.215/32
+  - 192.168.13.216/32
+  autoAssign: true
+  avoidBuggyIPs: false
+status:
+  assignedIPv4: 5
+  assignedIPv6: 0
+  availableIPv4: 2
+  availableIPv6: 0

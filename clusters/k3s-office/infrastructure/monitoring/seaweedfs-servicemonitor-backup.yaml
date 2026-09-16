@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"monitoring.coreos.com/v1","kind":"ServiceMonitor","metadata":{"annotations":{},"name":"seaweedfs","namespace":"monitoring"},"spec":{"endpoints":[{"interval":"15s","path":"/metrics","port":"metrics"}],"namespaceSelector":{"matchNames":["seaweedfs"]},"selector":{"matchLabels":{"monitoring":"true"}}}}
+  creationTimestamp: "2026-07-02T08:49:31Z"
+  generation: 1
+  name: seaweedfs
+  namespace: monitoring
+  resourceVersion: "393611"
+  uid: cb423e9c-ce68-4c04-ba7a-6e8c04ee9ee8
+spec:
+  endpoints:
+  - interval: 15s
+    path: /metrics
+    port: metrics
+  namespaceSelector:
+    matchNames:
+    - seaweedfs
+  selector:
+    matchLabels:
+      monitoring: "true"

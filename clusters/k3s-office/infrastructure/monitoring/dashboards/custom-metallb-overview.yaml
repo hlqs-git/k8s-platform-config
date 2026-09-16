@@ -1,0 +1,214 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-metallb-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-metallb-overview.json: "{\n  \"annotations\": {\n    \"list\": []\n  },\n\
+    \  \"editable\": false,\n  \"graphTooltip\": 1,\n  \"id\": null,\n  \"links\"\
+    : [],\n  \"liveNow\": false,\n  \"panels\": [\n    {\n      \"id\": 1,\n     \
+    \ \"type\": \"stat\",\n      \"title\": \"MetalLB Targets\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 0,\n      \
+    \  \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n  \
+    \        \"expr\": \"count(up{namespace=\\\"metallb-system\\\",job=\\\"metallb-system/metallb\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 2,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Controller\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 4,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"max(up{namespace=\\\
+    \"metallb-system\\\",job=\\\"metallb-system/metallb\\\",container=\\\"controller\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\",\n          \"mappings\"\
+    : [\n            {\n              \"type\": \"value\",\n              \"options\"\
+    : {\n                \"0\": {\n                  \"text\": \"DOWN\"\n        \
+    \        },\n                \"1\": {\n                  \"text\": \"UP\"\n  \
+    \              }\n              }\n            }\n          ]\n        },\n  \
+    \      \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 3,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Speakers Up\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 8,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(up{namespace=\\\
+    \"metallb-system\\\",job=\\\"metallb-system/metallb\\\",container=\\\"speaker\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 4,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Config Loaded\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 12,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"max(metallb_k8s_client_config_loaded_bool)\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\",\n          \"mappings\"\
+    : [\n            {\n              \"type\": \"value\",\n              \"options\"\
+    : {\n                \"0\": {\n                  \"text\": \"NOT LOADED\"\n  \
+    \              },\n                \"1\": {\n                  \"text\": \"LOADED\"\
+    \n                }\n              }\n            }\n          ]\n        },\n\
+    \        \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 5,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Config Status\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 16,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"max(metallb_k8s_client_config_stale_bool)\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\",\n          \"mappings\"\
+    : [\n            {\n              \"type\": \"value\",\n              \"options\"\
+    : {\n                \"0\": {\n                  \"text\": \"FRESH\"\n       \
+    \         },\n                \"1\": {\n                  \"text\": \"STALE\"\n\
+    \                }\n              }\n            }\n          ]\n        },\n\
+    \        \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 6,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Active L2 Announcements\",\n      \"datasource\": {\n  \
+    \      \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n    \
+    \  },\n      \"gridPos\": {\n        \"x\": 20,\n        \"y\": 0,\n        \"\
+    w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n       \
+    \   \"expr\": \"sum(metallb_speaker_announced{protocol=\\\"layer2\\\"})\",\n \
+    \         \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n  \
+    \      \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 7,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Pool Addresses\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 6,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(metallb_allocator_ipv4_addresses_total)\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 8,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Addresses In Use\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 6,\n        \"y\": 4,\n        \"w\": 6,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(metallb_allocator_ipv4_addresses_in_use_total)\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"reduceOptions\": {\n          \"values\"\
+    : false,\n          \"calcs\": [\n            \"lastNotNull\"\n          ]\n \
+    \       },\n        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\
+    \n      }\n    },\n    {\n      \"id\": 9,\n      \"type\": \"stat\",\n      \"\
+    title\": \"Addresses Available\",\n      \"datasource\": {\n        \"type\":\
+    \ \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 12,\n        \"y\": 4,\n        \"w\": 6,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(metallb_allocator_ipv4_addresses_total)\
+    \ - sum(metallb_allocator_ipv4_addresses_in_use_total)\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"reduceOptions\": {\n          \"values\"\
+    : false,\n          \"calcs\": [\n            \"lastNotNull\"\n          ]\n \
+    \       },\n        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\
+    \n      }\n    },\n    {\n      \"id\": 10,\n      \"type\": \"stat\",\n     \
+    \ \"title\": \"Pool Utilization\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 18,\n        \"y\": 4,\n        \"w\": 6,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"100 * sum(metallb_allocator_ipv4_addresses_in_use_total)\
+    \ / sum(metallb_allocator_ipv4_addresses_total)\",\n          \"refId\": \"A\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"percent\",\n          \"decimals\": 1\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 11,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"Address Pool Usage\",\n      \"datasource\": {\n       \
+    \ \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 8,\n        \"w\": 12,\n\
+    \        \"h\": 8\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"metallb_allocator_ipv4_addresses_in_use_total\",\n          \"legendFormat\"\
+    : \"{{pool}} - in use\",\n          \"refId\": \"A\"\n        }\n      ],\n  \
+    \    \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\
+    \n        },\n        \"overrides\": []\n      }\n    },\n    {\n      \"id\"\
+    : 12,\n      \"type\": \"timeseries\",\n      \"title\": \"Address Pool Capacity\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"metallb_allocator_ipv4_addresses_total\"\
+    ,\n          \"legendFormat\": \"{{pool}} - total\",\n          \"refId\": \"\
+    A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n\
+    \          \"unit\": \"short\"\n        },\n        \"overrides\": []\n      }\n\
+    \    },\n    {\n      \"id\": 13,\n      \"type\": \"timeseries\",\n      \"title\"\
+    : \"L2 Service Announcements\",\n      \"datasource\": {\n        \"type\": \"\
+    prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 16,\n        \"w\": 24,\n        \"h\"\
+    : 8\n      },\n      \"targets\": [\n        {\n          \"expr\": \"metallb_speaker_announced{protocol=\\\
+    \"layer2\\\"}\",\n          \"legendFormat\": \"{{service}} | {{ip}} | {{node}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      }\n    },\n    {\n      \"id\": 14,\n      \"type\": \"\
+    timeseries\",\n      \"title\": \"Layer2 Requests Received Rate\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 24,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum by (ip) (rate(metallb_layer2_requests_received[$__rate_interval]))\"\
+    ,\n          \"legendFormat\": \"{{ip}}\",\n          \"refId\": \"A\"\n     \
+    \   }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n         \
+    \ \"unit\": \"ops\"\n        },\n        \"overrides\": []\n      }\n    },\n\
+    \    {\n      \"id\": 15,\n      \"type\": \"timeseries\",\n      \"title\": \"\
+    Layer2 Responses Sent Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n \
+    \     },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (ip) (rate(metallb_layer2_responses_sent[$__rate_interval]))\"\
+    ,\n          \"legendFormat\": \"{{ip}}\",\n          \"refId\": \"A\"\n     \
+    \   }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n         \
+    \ \"unit\": \"ops\"\n        },\n        \"overrides\": []\n      }\n    },\n\
+    \    {\n      \"id\": 16,\n      \"type\": \"timeseries\",\n      \"title\": \"\
+    Gratuitous L2 Announcements Rate\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 32,\n        \"w\": 12,\n        \"h\"\
+    : 8\n      },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (ip)\
+    \ (rate(metallb_layer2_gratuitous_sent[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"{{ip}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      }\n    },\n    {\n      \"id\": 17,\n      \"type\"\
+    : \"timeseries\",\n      \"title\": \"Kubernetes Config Updates Rate\",\n    \
+    \  \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 32,\n   \
+    \     \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"rate(metallb_k8s_client_updates_total[$__rate_interval])\"\
+    ,\n          \"legendFormat\": \"updates\",\n          \"refId\": \"A\"\n    \
+    \    }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n        \
+    \  \"unit\": \"ops\"\n        },\n        \"overrides\": []\n      }\n    },\n\
+    \    {\n      \"id\": 18,\n      \"type\": \"timeseries\",\n      \"title\": \"\
+    Kubernetes Client Update Errors Rate\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 40,\n        \"w\": 12,\n        \"h\"\
+    : 8\n      },\n      \"targets\": [\n        {\n          \"expr\": \"rate(metallb_k8s_client_update_errors_total[$__rate_interval])\"\
+    ,\n          \"legendFormat\": \"errors\",\n          \"refId\": \"A\"\n     \
+    \   }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n         \
+    \ \"unit\": \"ops\"\n        },\n        \"overrides\": []\n      }\n    },\n\
+    \    {\n      \"id\": 19,\n      \"type\": \"timeseries\",\n      \"title\": \"\
+    MetalLB Target Health\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 40,\n        \"w\": 12,\n        \"h\": 8\n \
+    \     },\n      \"targets\": [\n        {\n          \"expr\": \"up{namespace=\\\
+    \"metallb-system\\\",job=\\\"metallb-system/metallb\\\"}\",\n          \"legendFormat\"\
+    : \"{{container}} | {{pod}} | {{instance}}\",\n          \"refId\": \"A\"\n  \
+    \      }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n      \
+    \    \"unit\": \"short\"\n        },\n        \"overrides\": []\n      }\n   \
+    \ }\n  ],\n  \"refresh\": \"30s\",\n  \"schemaVersion\": 41,\n  \"tags\": [\n\
+    \    \"custom\",\n    \"metallb\",\n    \"layer2\",\n    \"k3s\"\n  ],\n  \"templating\"\
+    : {\n    \"list\": [\n      {\n        \"name\": \"DS_PROMETHEUS\",\n        \"\
+    type\": \"datasource\",\n        \"label\": \"Prometheus\",\n        \"query\"\
+    : \"prometheus\",\n        \"current\": {},\n        \"hide\": 0,\n        \"\
+    refresh\": 1\n      }\n    ]\n  },\n  \"time\": {\n    \"from\": \"now-6h\",\n\
+    \    \"to\": \"now\"\n  },\n  \"timezone\": \"browser\",\n  \"title\": \"Custom\
+    \ - MetalLB Overview\",\n  \"uid\": \"custom-metallb-overview\",\n  \"version\"\
+    : 1\n}"

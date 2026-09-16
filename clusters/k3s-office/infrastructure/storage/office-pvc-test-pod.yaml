@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: office-pvc-test-pod
+  namespace: office-storage
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - |
+          mkdir -p /data/edgar /data/public
+          echo "edgar pvc test $(date)" >> /data/edgar/test.txt
+          echo "public pvc test $(date)" >> /data/public/test.txt
+          tail -f /data/edgar/test.txt /data/public/test.txt
+      volumeMounts:
+        - name: edgar
+          mountPath: /data/edgar
+        - name: public
+          mountPath: /data/public
+  volumes:
+    - name: edgar
+      persistentVolumeClaim:
+        claimName: edgar-pvc
+    - name: public
+      persistentVolumeClaim:
+        claimName: public-pvc

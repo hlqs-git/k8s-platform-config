@@ -1,0 +1,244 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"postgresql.cnpg.io/v1","kind":"Cluster","metadata":{"annotations":{},"name":"juicefs-postgres","namespace":"postgres"},"spec":{"affinity":{"enablePodAntiAffinity":true,"topologyKey":"kubernetes.io/hostname"},"bootstrap":{"initdb":{"database":"juicefs","owner":"juicefs","secret":{"name":"juicefs-db-auth"}}},"imageName":"ghcr.io/cloudnative-pg/postgresql:16","instances":3,"postgresql":{"parameters":{"max_connections":"200","shared_buffers":"256MB"}},"primaryUpdateStrategy":"unsupervised","resources":{"limits":{"cpu":"2","memory":"2Gi"},"requests":{"cpu":"500m","memory":"1Gi"}},"storage":{"size":"20Gi","storageClass":"local-path"}}}
+  creationTimestamp: "2026-07-09T01:29:13Z"
+  generation: 3
+  name: juicefs-postgres
+  namespace: postgres
+  resourceVersion: "34154809"
+  uid: fb89a2ac-b526-456b-8472-342c7b134930
+spec:
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: preferred
+    topologyKey: kubernetes.io/hostname
+  backup:
+    barmanObjectStore:
+      data:
+        compression: gzip
+      destinationPath: s3://pg-backup/juicefs-postgres
+      endpointURL: http://minio.minio.svc.cluster.local:9000
+      s3Credentials:
+        accessKeyId:
+          key: ACCESS_KEY_ID
+          name: minio-backup-secret
+        secretAccessKey:
+          key: ACCESS_SECRET_KEY
+          name: minio-backup-secret
+      wal:
+        compression: gzip
+    retentionPolicy: 7d
+    target: prefer-standby
+  bootstrap:
+    initdb:
+      database: juicefs
+      encoding: UTF8
+      localeCType: C
+      localeCollate: C
+      owner: juicefs
+      secret:
+        name: juicefs-db-auth
+  enablePDB: true
+  enableSuperuserAccess: false
+  failoverDelay: 0
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+  instances: 3
+  logLevel: info
+  maxSyncReplicas: 0
+  minSyncReplicas: 0
+  monitoring:
+    customQueriesConfigMap:
+    - key: queries
+      name: cnpg-default-monitoring
+    disableDefaultQueries: false
+    enablePodMonitor: true
+  postgresGID: 26
+  postgresUID: 26
+  postgresql:
+    parameters:
+      archive_mode: "on"
+      archive_timeout: 5min
+      dynamic_shared_memory_type: posix
+      full_page_writes: "on"
+      log_destination: csvlog
+      log_directory: /controller/log
+      log_filename: postgres
+      log_rotation_age: "0"
+      log_rotation_size: "0"
+      log_truncate_on_rotation: "false"
+      logging_collector: "on"
+      max_connections: "200"
+      max_parallel_workers: "32"
+      max_replication_slots: "32"
+      max_worker_processes: "32"
+      shared_buffers: 256MB
+      shared_memory_type: mmap
+      shared_preload_libraries: ""
+      ssl_max_protocol_version: TLSv1.3
+      ssl_min_protocol_version: TLSv1.3
+      wal_keep_size: 512MB
+      wal_level: logical
+      wal_log_hints: "on"
+      wal_receiver_timeout: 5s
+      wal_sender_timeout: 5s
+    syncReplicaElectionConstraint:
+      enabled: false
+  primaryUpdateMethod: restart
+  primaryUpdateStrategy: unsupervised
+  probes:
+    liveness:
+      isolationCheck:
+        connectionTimeout: 1000
+        enabled: true
+        requestTimeout: 1000
+  replicationSlots:
+    highAvailability:
+      enabled: true
+      slotPrefix: _cnpg_
+    synchronizeReplicas:
+      enabled: true
+    updateInterval: 30
+  resources:
+    limits:
+      cpu: "2"
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  smartShutdownTimeout: 180
+  startDelay: 3600
+  stopDelay: 1800
+  storage:
+    resizeInUseVolumes: true
+    size: 20Gi
+    storageClass: local-path
+  switchoverDelay: 3600
+status:
+  availableArchitectures:
+  - goArch: amd64
+    hash: 582a4e35fb052c39d3402794de5f6602a56cdc8cc4b92ce7abbe41a51a0bbc13
+  - goArch: arm64
+    hash: e61cf87bb9c89f1bca69d41367fd9a5c5c02e3eb7491922560984d03f85ecff0
+  certificates:
+    clientCASecret: juicefs-postgres-ca
+    expirations:
+      juicefs-postgres-ca: 2026-10-07 01:24:13 +0000 UTC
+      juicefs-postgres-replication: 2026-10-07 01:24:13 +0000 UTC
+      juicefs-postgres-server: 2026-10-07 01:24:13 +0000 UTC
+    replicationTLSSecret: juicefs-postgres-replication
+    serverAltDNSNames:
+    - juicefs-postgres-rw
+    - juicefs-postgres-rw.postgres
+    - juicefs-postgres-rw.postgres.svc
+    - juicefs-postgres-rw.postgres.svc.cluster.local
+    - juicefs-postgres-r
+    - juicefs-postgres-r.postgres
+    - juicefs-postgres-r.postgres.svc
+    - juicefs-postgres-r.postgres.svc.cluster.local
+    - juicefs-postgres-ro
+    - juicefs-postgres-ro.postgres
+    - juicefs-postgres-ro.postgres.svc
+    - juicefs-postgres-ro.postgres.svc.cluster.local
+    serverCASecret: juicefs-postgres-ca
+    serverTLSSecret: juicefs-postgres-server
+  cloudNativePGCommitHash: 4b5e244a7
+  cloudNativePGOperatorHash: 582a4e35fb052c39d3402794de5f6602a56cdc8cc4b92ce7abbe41a51a0bbc13
+  conditions:
+  - lastTransitionTime: "2026-07-09T01:29:17Z"
+    message: Cluster has been bootstrapped
+    reason: BootstrapCompleted
+    status: "True"
+    type: Initialized
+  - lastTransitionTime: "2026-07-09T01:31:02Z"
+    message: A single, unique system ID was found across reporting instances.
+    reason: Unique
+    status: "True"
+    type: ConsistentSystemID
+  - lastTransitionTime: "2026-07-16T01:24:48Z"
+    message: Cluster is Ready
+    reason: ClusterIsReady
+    status: "True"
+    type: Ready
+  - lastTransitionTime: "2026-07-16T08:08:37Z"
+    message: Continuous archiving is working
+    reason: ContinuousArchivingSuccess
+    status: "True"
+    type: ContinuousArchiving
+  - lastTransitionTime: "2026-07-15T02:00:14Z"
+    message: Backup was successful
+    reason: LastBackupSucceeded
+    status: "True"
+    type: LastBackupSucceeded
+  configMapResourceVersion:
+    metrics:
+      cnpg-default-monitoring: "2584273"
+  currentPrimary: juicefs-postgres-1
+  currentPrimaryTimestamp: "2026-07-09T01:31:01.094860Z"
+  firstRecoverabilityPoint: "2026-07-09T02:12:04Z"
+  firstRecoverabilityPointByMethod:
+    barmanObjectStore: "2026-07-09T02:12:04Z"
+  healthyPVC:
+  - juicefs-postgres-1
+  - juicefs-postgres-2
+  - juicefs-postgres-3
+  image: ghcr.io/cloudnative-pg/postgresql:16
+  instanceNames:
+  - juicefs-postgres-1
+  - juicefs-postgres-2
+  - juicefs-postgres-3
+  instances: 3
+  instancesReportedState:
+    juicefs-postgres-1:
+      ip: 10.42.2.68
+      isPrimary: true
+      timeLineID: 1
+    juicefs-postgres-2:
+      ip: 10.42.0.204
+      isPrimary: false
+      timeLineID: 1
+    juicefs-postgres-3:
+      ip: 10.42.1.56
+      isPrimary: false
+      timeLineID: 1
+  instancesStatus:
+    healthy:
+    - juicefs-postgres-1
+    - juicefs-postgres-2
+    - juicefs-postgres-3
+  lastSuccessfulBackup: "2026-07-15T02:00:11Z"
+  lastSuccessfulBackupByMethod:
+    barmanObjectStore: "2026-07-15T02:00:11Z"
+  managedRolesStatus: {}
+  operatorCertificateFingerprint: 13f0ef31a9691e6e21888f082b3e5f6c285639bc104eac75fe700a86049cc6a9
+  pgDataImageInfo:
+    image: ghcr.io/cloudnative-pg/postgresql:16
+    majorVersion: 16
+  phase: Cluster in healthy state
+  poolerIntegrations:
+    pgBouncerIntegration: {}
+  pvcCount: 3
+  readService: juicefs-postgres-r
+  readyInstances: 3
+  secretsResourceVersion:
+    applicationSecretVersion: "2584172"
+    clientCaSecretVersion: "2584241"
+    replicationSecretVersion: "2584244"
+    serverCaSecretVersion: "2584241"
+    serverSecretVersion: "2584243"
+  selector: cnpg.io/cluster=juicefs-postgres,cnpg.io/podRole=instance
+  switchReplicaClusterStatus: {}
+  systemID: "7660334564458139667"
+  targetPrimary: juicefs-postgres-1
+  targetPrimaryTimestamp: "2026-07-09T01:29:16.908132Z"
+  timelineID: 1
+  topology:
+    instances:
+      juicefs-postgres-1: {}
+      juicefs-postgres-2: {}
+      juicefs-postgres-3: {}
+    nodesUsed: 3
+    successfullyExtracted: true
+  writeService: juicefs-postgres-rw

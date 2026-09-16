@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: office-nfs-edgar
+  namespace: office-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: office-nfs-edgar
+  template:
+    metadata:
+      labels:
+        app: office-nfs-edgar
+    spec:
+      containers:
+        - name: nfs-server
+          image: itsthenetwork/nfs-server-alpine:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: SHARED_DIRECTORY
+              value: /exports
+            - name: SYNC
+              value: "true"
+            - name: PERMITTED
+              value: "*"
+          ports:
+            - name: nfs
+              containerPort: 2049
+              protocol: TCP
+          volumeMounts:
+            - name: edgar
+              mountPath: /exports
+      volumes:
+        - name: edgar
+          persistentVolumeClaim:
+            claimName: edgar-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: office-nfs-edgar-lb
+  namespace: office-storage
+spec:
+  type: LoadBalancer
+  selector:
+    app: office-nfs-edgar
+  ports:
+    - name: nfs
+      port: 2049
+      targetPort: 2049
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: office-nfs-public
+  namespace: office-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: office-nfs-public
+  template:
+    metadata:
+      labels:
+        app: office-nfs-public
+    spec:
+      containers:
+        - name: nfs-server
+          image: itsthenetwork/nfs-server-alpine:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: SHARED_DIRECTORY
+              value: /exports
+            - name: SYNC
+              value: "true"
+            - name: PERMITTED
+              value: "*"
+          ports:
+            - name: nfs
+              containerPort: 2049
+              protocol: TCP
+          volumeMounts:
+            - name: public
+              mountPath: /exports
+      volumes:
+        - name: public
+          persistentVolumeClaim:
+            claimName: public-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: office-nfs-public-lb
+  namespace: office-storage
+spec:
+  type: LoadBalancer
+  selector:
+    app: office-nfs-public
+  ports:
+    - name: nfs
+      port: 2049
+      targetPort: 2049
+      protocol: TCP

@@ -1,0 +1,80 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cnpg-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: cnpg.rules
+      rules:
+        - alert: CNPGPostgreSQLDown
+          expr: cnpg_collector_up == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PostgreSQL 实例状态异常"
+            description: "PostgreSQL 实例 {{ $labels.pod }} 已连续 5 分钟无法正常采集数据库状态。集群：{{ $labels.cluster }}，命名空间：{{ $labels.namespace }}。"
+
+        - alert: CNPGReplicaWALReceiverDown
+          expr: |
+            cnpg_pg_replication_in_recovery == 1
+            and
+            cnpg_pg_replication_is_wal_receiver_up == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PostgreSQL 副本复制链路异常"
+            description: "副本 {{ $labels.pod }} 的 WAL Receiver 已连续 5 分钟未正常运行，副本可能无法继续接收 Primary 的 WAL 数据。"
+
+        - alert: CNPGReplicationLagHigh
+          expr: |
+            cnpg_pg_replication_lag > 60
+            and
+            cnpg_pg_replication_lag <= 300
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PostgreSQL 副本复制延迟较高"
+            description: "实例 {{ $labels.pod }} 的复制延迟已连续 5 分钟超过 60 秒，当前延迟约 {{ $value }} 秒。"
+
+        - alert: CNPGReplicationLagCritical
+          expr: cnpg_pg_replication_lag > 300
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PostgreSQL 副本复制严重延迟"
+            description: "实例 {{ $labels.pod }} 的复制延迟已连续 5 分钟超过 300 秒，当前延迟约 {{ $value }} 秒，请立即检查复制链路。"
+
+        - alert: CNPGDeadlocksDetected
+          expr: increase(cnpg_pg_stat_database_deadlocks{datname!=""}[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "PostgreSQL 检测到数据库死锁"
+            description: "数据库 {{ $labels.datname }} 在最近 10 分钟内出现新的死锁。实例：{{ $labels.pod }}，新增死锁数约 {{ $value }}。"
+
+        - alert: CNPGWALArchiveFailures
+          expr: increase(cnpg_pg_stat_archiver_failed_count[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "PostgreSQL WAL 归档出现失败"
+            description: "实例 {{ $labels.pod }} 在最近 10 分钟内出现新的 WAL 归档失败，请检查 CNPG、对象存储及网络状态。"
+
+        - alert: CNPGBackupStale
+          expr: |
+            (time() - max by (namespace, job) (
+              cnpg_collector_last_available_backup_timestamp
+            )) > 36 * 3600
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PostgreSQL 长时间没有成功备份"
+            description: "PostgreSQL 集群超过 36 小时没有产生新的可用备份。监控任务：{{ $labels.job }}，命名空间：{{ $labels.namespace }}，请检查 ScheduledBackup、CNPG Backup 以及对象存储状态。"

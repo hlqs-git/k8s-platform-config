@@ -1,0 +1,34 @@
+replicas: 1
+
+extraSecretMounts:
+  - name: snmp-exporter-config
+    mountPath: /run/secrets/snmp-exporter
+    secretName: snmp-exporter-config
+    readOnly: true
+
+extraArgs:
+  - --config.file=/etc/snmp_exporter/snmp.yml
+  - --config.file=/run/secrets/snmp-exporter/snmp.yml
+
+serviceMonitor:
+  enabled: true
+
+  module:
+    - if_mib
+
+  auth:
+    - spine04_v2
+
+  scrapeTimeout: 10s
+
+  params:
+    - name: spine04
+      target: 192.168.10.8
+      module:
+        - if_mib
+      labels:
+        release: kube-prometheus-stack
+      interval: 30s
+      scrapeTimeout: 10s
+      additionalMetricsRelabels:
+        switch: Spine04

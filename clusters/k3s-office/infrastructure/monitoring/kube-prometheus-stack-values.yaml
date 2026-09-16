@@ -1,0 +1,155 @@
+grafana:
+  adminPassword: Admin@123456
+  enabled: true
+  service:
+    type: ClusterIP
+
+prometheus:
+  prometheusSpec:
+    podMonitorSelectorNilUsesHelmValues: false
+    retention: 15d
+    serviceMonitorSelectorNilUsesHelmValues: false
+    storageSpec: {}
+
+customRules:
+  KubeNodeNotReady:
+    for: 5m
+    severity: warning
+
+  KubeNodeUnreachable:
+    for: 5m
+    severity: warning
+
+  KubeletInstanceUnreachable:
+    for: 5m
+    severity: warning
+
+  KubeletDown:
+    for: 10m
+    severity: critical
+
+  NodeCPUHighUsage:
+    for: 15m
+    severity: warning
+
+# K3s embedded etcd monitoring
+kubeEtcd:
+  enabled: true
+  endpoints:
+    - 192.168.12.89
+    - 192.168.12.90
+    - 192.168.12.91
+
+# K3s components are embedded / not exposed as standard standalone targets
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false
+
+# Alertmanager notification configuration
+alertmanager:
+  alertmanagerSpec:
+    secrets:
+      - alertmanager-mattermost-webhook
+
+  config:
+    global:
+      resolve_timeout: 5m
+
+    inhibit_rules:
+      - source_matchers:
+          - 'severity = critical'
+        target_matchers:
+          - 'severity =~ warning|info'
+        equal:
+          - namespace
+          - alertname
+
+      - source_matchers:
+          - 'severity = warning'
+        target_matchers:
+          - 'severity = info'
+        equal:
+          - namespace
+          - alertname
+
+      - source_matchers:
+          - 'alertname = InfoInhibitor'
+        target_matchers:
+          - 'severity = info'
+        equal:
+          - namespace
+
+      - target_matchers:
+          - 'alertname = InfoInhibitor'
+
+    route:
+      group_by:
+        - alertname
+        - namespace
+      group_wait: 30s
+      group_interval: 1m
+      repeat_interval: 4h
+      receiver: "null"
+
+      routes:
+        # Watchdog is intentionally always firing.
+        # Do not send it to Mattermost.
+        - receiver: "null"
+          matchers:
+            - 'alertname = "Watchdog"'
+
+        # Send Critical and Warning alerts to Mattermost.
+        - receiver: "mattermost"
+          matchers:
+            - 'severity =~ "critical|warning"'
+
+    receivers:
+      - name: "null"
+
+      - name: "mattermost"
+        mattermost_configs:
+          - webhook_url_file: /etc/alertmanager/secrets/alertmanager-mattermost-webhook/url
+            send_resolved: true
+            username: Alertmanager
+        
+            title: >-
+              {{ if eq .Status "firing" }}🔴 告警触发{{ else }}🟢 告警恢复{{ end }}
+              - {{ .CommonLabels.alertname }}
+        
+            text: |-
+              {{ range .Alerts }}
+              {{ if eq .Status "firing" }}### 🔥 告警触发{{ else }}### ✅ 告警恢复{{ end }}
+        
+              **告警名称：** {{ .Labels.alertname }}
+              **告警级别：** {{ if eq .Labels.severity "critical" }}🔴 严重{{ else if eq .Labels.severity "warning" }}🟡 警告{{ else }}🔵 {{ .Labels.severity }}{{ end }}
+              {{- if .Labels.namespace }}
+              **命名空间：** {{ .Labels.namespace }}
+              {{- end }}
+              {{- if .Labels.pod }}
+              **Pod：** {{ .Labels.pod }}
+              {{- end }}
+              {{- if .Labels.node }}
+              **节点：** {{ .Labels.node }}
+              {{- end }}
+              {{- if .Labels.instance }}
+              **实例：** {{ .Labels.instance }}
+              {{- end }}
+        
+              {{ if .Annotations.summary }}**📌 告警摘要**
+        
+              {{ .Annotations.summary }}
+              {{ end }}
+              {{ if .Annotations.description }}**🔎 详细信息**
+        
+              {{ .Annotations.description }}
+              {{ end }}
+              ---
+              {{ end }}
+
+    templates:
+      - /etc/alertmanager/config/*.tmpl

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: juicefs-test-2
+spec:
+  nodeName: master02
+  containers:
+    - name: test
+      image: busybox:1.36
+      command:
+        - /bin/sh
+        - -c
+        - sleep 36000
+      volumeMounts:
+        - name: juicefs
+          mountPath: /data
+  volumes:
+    - name: juicefs
+      persistentVolumeClaim:
+        claimName: juicefs-test-pvc

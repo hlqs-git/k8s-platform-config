@@ -1,0 +1,46 @@
+expose:
+  type: clusterIP
+
+  tls:
+    enabled: false
+
+externalURL: https://hb.k3s.hlqs.top
+
+persistence:
+  enabled: true
+  resourcePolicy: keep
+
+  persistentVolumeClaim:
+    registry:
+      storageClass: juicefs-sc
+      accessMode: ReadWriteMany
+      size: 500Gi
+
+    jobservice:
+      jobLog:
+        storageClass: juicefs-sc
+        accessMode: ReadWriteMany
+        size: 10Gi
+
+    database:
+      storageClass: local-path
+      accessMode: ReadWriteOnce
+      size: 20Gi
+
+    redis:
+      storageClass: local-path
+      accessMode: ReadWriteOnce
+      size: 5Gi
+
+    trivy:
+      storageClass: local-path
+      accessMode: ReadWriteOnce
+      size: 20Gi
+
+  imageChartStorage:
+    type: filesystem
+
+harborAdminPassword: "Pwd@algoblu.com123"
+
+trivy:
+  enabled: true

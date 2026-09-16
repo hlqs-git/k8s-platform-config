@@ -1,0 +1,16 @@
+# postgres-lb.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: juicefs-postgres-lb
+  namespace: postgres
+spec:
+  type: LoadBalancer
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+  selector:
+    # 填入第一步查到的标签（CNPG 默认一般如下）
+    cnpg.io/cluster: juicefs-postgres
+    cnpg.io/instanceRole: primary

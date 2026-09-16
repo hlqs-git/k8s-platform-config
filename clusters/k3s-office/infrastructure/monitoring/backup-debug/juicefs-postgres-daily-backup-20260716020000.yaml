@@ -1,0 +1,43 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  creationTimestamp: "2026-07-16T01:59:59Z"
+  generation: 1
+  labels:
+    cnpg.io/cluster: juicefs-postgres
+    cnpg.io/immediateBackup: "false"
+    cnpg.io/scheduled-backup: juicefs-postgres-daily-backup
+  name: juicefs-postgres-daily-backup-20260716020000
+  namespace: postgres
+  ownerReferences:
+  - apiVersion: postgresql.cnpg.io/v1
+    controller: true
+    kind: ScheduledBackup
+    name: juicefs-postgres-daily-backup
+    uid: 31b8e156-efbf-4f51-9f13-448728ad88dc
+  resourceVersion: "6120565"
+  uid: 2fa3b36f-514f-4e36-b7c4-8ab0b9c7709e
+spec:
+  cluster:
+    name: juicefs-postgres
+  method: barmanObjectStore
+status:
+  backupName: backup-20260716020000
+  destinationPath: s3://pg-backup/juicefs-postgres
+  endpointURL: http://minio.minio.svc.cluster.local:9000
+  instanceID:
+    ContainerID: containerd://5fd5f5c01493cfbe650215bdc048539297475056619cb8a44abf0556a1835e52
+    podName: juicefs-postgres-2
+    sessionID: cbd8fdc7-9f84-4be1-bd13-a894cd7e2f6f
+  majorVersion: 16
+  method: barmanObjectStore
+  phase: walArchivingFailing
+  reconciliationStartedAt: "2026-07-16T02:00:00Z"
+  s3Credentials:
+    accessKeyId:
+      key: ACCESS_KEY_ID
+      name: minio-backup-secret
+    secretAccessKey:
+      key: ACCESS_SECRET_KEY
+      name: minio-backup-secret
+  serverName: juicefs-postgres

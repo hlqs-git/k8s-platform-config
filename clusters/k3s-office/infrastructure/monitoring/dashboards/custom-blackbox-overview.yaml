@@ -1,0 +1,242 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-blackbox-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-blackbox-overview.json: "{\n  \"annotations\": {\n    \"list\": []\n  },\n\
+    \  \"editable\": false,\n  \"graphTooltip\": 1,\n  \"id\": null,\n  \"links\"\
+    : [],\n  \"liveNow\": false,\n  \"panels\": [\n    {\n      \"id\": 1,\n     \
+    \ \"type\": \"stat\",\n      \"title\": \"Total Targets\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 0,\n      \
+    \  \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n  \
+    \        \"expr\": \"count(probe_success{job=~\\\"blackbox-.*\\\"})\",\n     \
+    \     \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n      \
+    \  \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 2,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Targets Up\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 4,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(probe_success{job=~\\\
+    \"blackbox-.*\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n    \
+    \  \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\n\
+    \        },\n        \"overrides\": []\n      },\n      \"options\": {\n     \
+    \   \"reduceOptions\": {\n          \"values\": false,\n          \"calcs\": [\n\
+    \            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 3,\n      \"type\": \"stat\",\n      \"title\": \"Targets Down\",\n    \
+    \  \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 8,\n        \"y\": 0,\n     \
+    \   \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n \
+    \         \"expr\": \"count(probe_success{job=~\\\"blackbox-.*\\\"}) - sum(probe_success{job=~\\\
+    \"blackbox-.*\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n    \
+    \  \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\n\
+    \        },\n        \"overrides\": []\n      },\n      \"options\": {\n     \
+    \   \"reduceOptions\": {\n          \"values\": false,\n          \"calcs\": [\n\
+    \            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 4,\n      \"type\": \"stat\",\n      \"title\": \"HTTP Targets Up\",\n \
+    \     \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n     \
+    \   \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(probe_success{job=\\\"blackbox-http\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 5,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"TCP Targets Up\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 16,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(probe_success{job=\\\
+    \"blackbox-tcp\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n   \
+    \   \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\
+    \n        },\n        \"overrides\": []\n      },\n      \"options\": {\n    \
+    \    \"reduceOptions\": {\n          \"values\": false,\n          \"calcs\":\
+    \ [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 6,\n      \"type\": \"stat\",\n      \"title\": \"DNS Targets Up\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 20,\n     \
+    \   \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(probe_success{job=\\\"blackbox-dns-harbor\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 7,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Minimum TLS Days Left\",\n      \"datasource\": {\n    \
+    \    \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 6,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"min((probe_ssl_earliest_cert_expiry{job=\\\"blackbox-http\\\"} - time()) /\
+    \ 86400)\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"none\",\n          \"decimals\"\
+    : 1\n        },\n        \"overrides\": []\n      },\n      \"options\": {\n \
+    \       \"reduceOptions\": {\n          \"values\": false,\n          \"calcs\"\
+    : [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 8,\n      \"type\": \"stat\",\n      \"title\": \"PostgreSQL TCP\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 6,\n      \
+    \  \"y\": 4,\n        \"w\": 6,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"max(probe_success{job=\\\"blackbox-tcp\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\",\n          \"mappings\"\
+    : [\n            {\n              \"type\": \"value\",\n              \"options\"\
+    : {\n                \"0\": {\n                  \"text\": \"DOWN\"\n        \
+    \        },\n                \"1\": {\n                  \"text\": \"UP\"\n  \
+    \              }\n              }\n            }\n          ]\n        },\n  \
+    \      \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 9,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Harbor DNS\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 12,\n        \"y\": 4,\n        \"w\": 6,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"max(probe_success{job=\\\
+    \"blackbox-dns-harbor\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n\
+    \      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\
+    ,\n          \"mappings\": [\n            {\n              \"type\": \"value\"\
+    ,\n              \"options\": {\n                \"0\": {\n                  \"\
+    text\": \"DOWN\"\n                },\n                \"1\": {\n             \
+    \     \"text\": \"UP\"\n                }\n              }\n            }\n  \
+    \        ]\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 10,\n      \"type\": \"stat\",\n      \"title\": \"HTTP Healthy\",\n   \
+    \   \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 18,\n     \
+    \   \"y\": 4,\n        \"w\": 6,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"min(probe_success{job=\\\"blackbox-http\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\",\n          \"mappings\"\
+    : [\n            {\n              \"type\": \"value\",\n              \"options\"\
+    : {\n                \"0\": {\n                  \"text\": \"DOWN\"\n        \
+    \        },\n                \"1\": {\n                  \"text\": \"UP\"\n  \
+    \              }\n              }\n            }\n          ]\n        },\n  \
+    \      \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 11,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"Probe Success by Target\",\n      \"datasource\": {\n  \
+    \      \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n    \
+    \  },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 8,\n        \"\
+    w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n      \
+    \    \"expr\": \"probe_success{job=~\\\"blackbox-(http|tcp|dns-harbor)\\\"}\"\
+    ,\n          \"legendFormat\": \"{{job}} | {{instance}}\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    }\n    },\n    {\n      \"id\": 12,\n      \"type\": \"timeseries\",\n  \
+    \    \"title\": \"Probe Duration by Target\",\n      \"datasource\": {\n     \
+    \   \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n        \"w\": 12,\n\
+    \        \"h\": 8\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"probe_duration_seconds{job=~\\\"blackbox-(http|tcp|dns-harbor)\\\"}\",\n \
+    \         \"legendFormat\": \"{{job}} | {{instance}}\",\n          \"refId\":\
+    \ \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"s\"\n        },\n        \"overrides\": []\n      }\n\
+    \    },\n    {\n      \"id\": 13,\n      \"type\": \"timeseries\",\n      \"title\"\
+    : \"HTTP Status Code\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 16,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"probe_http_status_code{job=\\\
+    \"blackbox-http\\\"}\",\n          \"legendFormat\": \"{{instance}}\",\n     \
+    \     \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n      \
+    \  \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      }\n    },\n    {\n      \"id\": 14,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"HTTP Resolve Time\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 12,\n        \"y\": 16,\n        \"w\": 12,\n\
+    \        \"h\": 8\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"probe_http_duration_seconds{job=\\\"blackbox-http\\\",phase=\\\"resolve\\\"\
+    }\",\n          \"legendFormat\": \"{{instance}}\",\n          \"refId\": \"A\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"s\"\n        },\n        \"overrides\": []\n      }\n    },\n\
+    \    {\n      \"id\": 15,\n      \"type\": \"timeseries\",\n      \"title\": \"\
+    HTTP Connect Time\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"probe_http_duration_seconds{job=\\\
+    \"blackbox-http\\\",phase=\\\"connect\\\"}\",\n          \"legendFormat\": \"\
+    {{instance}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"s\"\n        },\n        \"\
+    overrides\": []\n      }\n    },\n    {\n      \"id\": 16,\n      \"type\": \"\
+    timeseries\",\n      \"title\": \"HTTP TLS Time\",\n      \"datasource\": {\n\
+    \        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n  \
+    \    },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 24,\n      \
+    \  \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n \
+    \         \"expr\": \"probe_http_duration_seconds{job=\\\"blackbox-http\\\",phase=\\\
+    \"tls\\\"}\",\n          \"legendFormat\": \"{{instance}}\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"s\"\n        },\n        \"overrides\": []\n      }\n\
+    \    },\n    {\n      \"id\": 17,\n      \"type\": \"timeseries\",\n      \"title\"\
+    : \"HTTP Processing Time\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 32,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"probe_http_duration_seconds{job=\\\
+    \"blackbox-http\\\",phase=\\\"processing\\\"}\",\n          \"legendFormat\":\
+    \ \"{{instance}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"s\"\n       \
+    \ },\n        \"overrides\": []\n      }\n    },\n    {\n      \"id\": 18,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"HTTP Transfer Time\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n     \
+    \   \"y\": 32,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"probe_http_duration_seconds{job=\\\"blackbox-http\\\
+    \",phase=\\\"transfer\\\"}\",\n          \"legendFormat\": \"{{instance}}\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"s\"\n        },\n        \"overrides\"\
+    : []\n      }\n    },\n    {\n      \"id\": 19,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"TLS Certificate Days Left\",\n      \"datasource\": {\n\
+    \        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n  \
+    \    },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 40,\n       \
+    \ \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n  \
+    \        \"expr\": \"(probe_ssl_earliest_cert_expiry{job=\\\"blackbox-http\\\"\
+    } - time()) / 86400\",\n          \"legendFormat\": \"{{instance}}\",\n      \
+    \    \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n       \
+    \ \"defaults\": {\n          \"unit\": \"none\"\n        },\n        \"overrides\"\
+    : []\n      }\n    },\n    {\n      \"id\": 20,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"DNS Lookup Time\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 12,\n        \"y\": 40,\n        \"w\": 12,\n\
+    \        \"h\": 8\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"probe_dns_lookup_time_seconds{job=\\\"blackbox-dns-harbor\\\"}\",\n      \
+    \    \"legendFormat\": \"{{instance}}\",\n          \"refId\": \"A\"\n       \
+    \ }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"\
+    unit\": \"s\"\n        },\n        \"overrides\": []\n      }\n    },\n    {\n\
+    \      \"id\": 21,\n      \"type\": \"timeseries\",\n      \"title\": \"DNS Query\
+    \ Success\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n   \
+    \     \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"\
+    x\": 0,\n        \"y\": 48,\n        \"w\": 12,\n        \"h\": 8\n      },\n\
+    \      \"targets\": [\n        {\n          \"expr\": \"probe_dns_query_succeeded{job=\\\
+    \"blackbox-dns-harbor\\\"}\",\n          \"legendFormat\": \"{{instance}}\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      }\n    },\n    {\n      \"id\": 22,\n      \"type\": \"\
+    timeseries\",\n      \"title\": \"PostgreSQL TCP Probe Duration\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 48,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"probe_duration_seconds{job=\\\"blackbox-tcp\\\"}\",\n \
+    \         \"legendFormat\": \"{{instance}}\",\n          \"refId\": \"A\"\n  \
+    \      }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n      \
+    \    \"unit\": \"s\"\n        },\n        \"overrides\": []\n      }\n    }\n\
+    \  ],\n  \"refresh\": \"30s\",\n  \"schemaVersion\": 41,\n  \"tags\": [\n    \"\
+    custom\",\n    \"blackbox\",\n    \"availability\",\n    \"k3s\"\n  ],\n  \"templating\"\
+    : {\n    \"list\": [\n      {\n        \"name\": \"DS_PROMETHEUS\",\n        \"\
+    type\": \"datasource\",\n        \"label\": \"Prometheus\",\n        \"query\"\
+    : \"prometheus\",\n        \"current\": {},\n        \"hide\": 0,\n        \"\
+    refresh\": 1\n      }\n    ]\n  },\n  \"time\": {\n    \"from\": \"now-6h\",\n\
+    \    \"to\": \"now\"\n  },\n  \"timezone\": \"browser\",\n  \"title\": \"Custom\
+    \ - Blackbox Overview\",\n  \"uid\": \"custom-blackbox-overview\",\n  \"version\"\
+    : 1\n}"

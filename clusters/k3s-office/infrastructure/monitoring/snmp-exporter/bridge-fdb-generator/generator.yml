@@ -1,0 +1,41 @@
+modules:
+  bridge_fdb:
+    walk:
+      - BRIDGE-MIB::dot1dTpFdbTable
+      - BRIDGE-MIB::dot1dBasePortTable
+      - IF-MIB::ifName
+      - IF-MIB::ifAlias
+
+    lookups:
+      # MAC -> Bridge Port
+      - source_indexes:
+          - dot1dTpFdbAddress
+        lookup: dot1dTpFdbPort
+
+      # Bridge Port -> ifIndex
+      - source_indexes:
+          - dot1dTpFdbPort
+        lookup: dot1dBasePortIfIndex
+
+      # ifIndex -> ifName
+      - source_indexes:
+          - dot1dBasePortIfIndex
+        lookup: IF-MIB::ifName
+
+      # ifIndex -> ifAlias
+      - source_indexes:
+          - dot1dBasePortIfIndex
+        lookup: IF-MIB::ifAlias
+
+    overrides:
+      dot1dTpFdbPort:
+        ignore: true
+      dot1dBasePortIfIndex:
+        ignore: true
+      ifName:
+        ignore: true
+      ifAlias:
+        ignore: true
+
+      dot1dTpFdbStatus:
+        type: EnumAsInfo

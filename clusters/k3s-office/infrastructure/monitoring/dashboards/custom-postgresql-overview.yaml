@@ -1,0 +1,344 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-postgresql-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-postgresql-overview.json: "{\n  \"id\": null,\n  \"uid\": \"custom-postgresql-overview\"\
+    ,\n  \"title\": \"Custom - PostgreSQL Overview\",\n  \"tags\": [\n    \"custom\"\
+    ,\n    \"postgresql\",\n    \"cnpg\"\n  ],\n  \"timezone\": \"browser\",\n  \"\
+    schemaVersion\": 41,\n  \"version\": 3,\n  \"refresh\": \"30s\",\n  \"time\":\
+    \ {\n    \"from\": \"now-6h\",\n    \"to\": \"now\"\n  },\n  \"templating\": {\n\
+    \    \"list\": [\n      {\n        \"name\": \"DS_PROMETHEUS\",\n        \"type\"\
+    : \"datasource\",\n        \"label\": \"Prometheus\",\n        \"query\": \"prometheus\"\
+    ,\n        \"current\": {}\n      }\n    ]\n  },\n  \"panels\": [\n    {\n   \
+    \   \"id\": 1,\n      \"type\": \"stat\",\n      \"title\": \"PostgreSQL Targets\
+    \ Up\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"\
+    uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n\
+    \        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(up{job=\\\"postgres/juicefs-postgres\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 2,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"CNPG Collectors Up\",\n      \"datasource\": {\n       \
+    \ \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 4,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(cnpg_collector_up{job=\\\"postgres/juicefs-postgres\\\"})\",\n       \
+    \   \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"\
+    defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 3,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Primary Instances\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 8,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"count(cnpg_pg_replication_in_recovery{job=\\\"postgres/juicefs-postgres\\\"\
+    } == 0)\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 4,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Replica Instances\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 12,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"count(cnpg_pg_replication_in_recovery{job=\\\"postgres/juicefs-postgres\\\"\
+    } == 1)\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 5,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Streaming Replicas\",\n      \"datasource\": {\n       \
+    \ \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 16,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"max(cnpg_pg_replication_streaming_replicas{job=\\\"postgres/juicefs-postgres\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 6,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Unhealthy Targets\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 20,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"count(up{job=\\\"postgres/juicefs-postgres\\\"} == 0) or vector(0)\",\n  \
+    \        \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n   \
+    \     \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 7,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Active Backends\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(cnpg_backends_total{job=\\\"postgres/juicefs-postgres\\\",state=\\\"active\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 8,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Idle Backends\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 4,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(cnpg_backends_total{job=\\\
+    \"postgres/juicefs-postgres\\\",state=\\\"idle\\\"})\",\n          \"refId\":\
+    \ \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"reduceOptions\": {\n          \"values\"\
+    : false,\n          \"calcs\": [\n            \"lastNotNull\"\n          ]\n \
+    \       },\n        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\
+    \n      }\n    },\n    {\n      \"id\": 9,\n      \"type\": \"stat\",\n      \"\
+    title\": \"Commit Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 8,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_xact_commit{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"refId\":\
+    \ \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"ops\",\n          \"decimals\": 2\n        },\n   \
+    \     \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 10,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Rollback Rate\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 12,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_xact_rollback{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"refId\":\
+    \ \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"ops\",\n          \"decimals\": 3\n        },\n   \
+    \     \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 11,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Deadlock Rate\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 16,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_deadlocks{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"refId\":\
+    \ \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"ops\",\n          \"decimals\": 3\n        },\n   \
+    \     \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 12,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Cache Hit Ratio\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 20,\n        \"y\": 4,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"100 * sum(rate(cnpg_pg_stat_database_blks_hit{job=\\\"postgres/juicefs-postgres\\\
+    \"}[$__rate_interval])) / clamp_min(sum(rate(cnpg_pg_stat_database_blks_hit{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval])) + sum(rate(cnpg_pg_stat_database_blks_read{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval])), 1)\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"percent\",\n          \"decimals\": 2,\n          \"\
+    thresholds\": {\n            \"mode\": \"absolute\",\n            \"steps\": [\n\
+    \              {\n                \"color\": \"red\",\n                \"value\"\
+    : null\n              },\n              {\n                \"color\": \"yellow\"\
+    ,\n                \"value\": 90\n              },\n              {\n        \
+    \        \"color\": \"green\",\n                \"value\": 95\n              }\n\
+    \            ]\n          },\n          \"color\": {\n            \"mode\": \"\
+    thresholds\"\n          }\n        },\n        \"overrides\": []\n      },\n \
+    \     \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 13,\n      \"type\": \"timeseries\",\n      \"title\"\
+    : \"Replication Lag by Pod\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"cnpg_pg_replication_lag{job=\\\
+    \"postgres/juicefs-postgres\\\"}\",\n          \"legendFormat\": \"{{pod}}\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"s\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 14,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Replay Lag by Replica\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 8,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"cnpg_pg_stat_replication_replay_lag_seconds{job=\\\
+    \"postgres/juicefs-postgres\\\"}\",\n          \"legendFormat\": \"{{application_name}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"s\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 15,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Replication Replay Difference\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n  \
+    \      \"y\": 16,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"cnpg_pg_stat_replication_replay_diff_bytes{job=\\\
+    \"postgres/juicefs-postgres\\\"}\",\n          \"legendFormat\": \"{{application_name}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"bytes\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 16,\n      \"type\": \"timeseries\",\n      \"title\": \"Streaming\
+    \ Replicas\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n  \
+    \      \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n       \
+    \ \"x\": 12,\n        \"y\": 16,\n        \"w\": 12,\n        \"h\": 8\n     \
+    \ },\n      \"targets\": [\n        {\n          \"expr\": \"cnpg_pg_replication_streaming_replicas{job=\\\
+    \"postgres/juicefs-postgres\\\"}\",\n          \"legendFormat\": \"{{pod}}\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 17,\n      \"type\": \"timeseries\",\n      \"title\": \"Transaction\
+    \ Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n      \
+    \  \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\"\
+    : 0,\n        \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n      },\n   \
+    \   \"targets\": [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_xact_commit{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"Commit\",\n          \"refId\": \"A\"\n        },\n        {\n          \"\
+    expr\": \"sum(rate(cnpg_pg_stat_database_xact_rollback{job=\\\"postgres/juicefs-postgres\\\
+    \"}[$__rate_interval]))\",\n          \"legendFormat\": \"Rollback\",\n      \
+    \    \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\": {\n       \
+    \ \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 18,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Backend Connections by State\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum by (state) (cnpg_backends_total{job=\\\
+    \"postgres/juicefs-postgres\\\"})\",\n          \"legendFormat\": \"{{state}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 19,\n      \"type\": \"timeseries\",\n      \"title\": \"Tuple Activity\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n  \
+    \      \"y\": 32,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_tup_inserted{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"Inserted\",\n          \"refId\": \"A\"\n        },\n        {\n         \
+    \ \"expr\": \"sum(rate(cnpg_pg_stat_database_tup_updated{job=\\\"postgres/juicefs-postgres\\\
+    \"}[$__rate_interval]))\",\n          \"legendFormat\": \"Updated\",\n       \
+    \   \"refId\": \"B\"\n        },\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_tup_deleted{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"Deleted\",\n          \"refId\": \"C\"\n        },\n        {\n          \"\
+    expr\": \"sum(rate(cnpg_pg_stat_database_tup_fetched{job=\\\"postgres/juicefs-postgres\\\
+    \"}[$__rate_interval]))\",\n          \"legendFormat\": \"Fetched\",\n       \
+    \   \"refId\": \"D\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"\
+    defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 20,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Database Cache Activity\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 32,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_blks_hit{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"Cache Hits\",\n          \"refId\": \"A\"\n        },\n        {\n       \
+    \   \"expr\": \"sum(rate(cnpg_pg_stat_database_blks_read{job=\\\"postgres/juicefs-postgres\\\
+    \"}[$__rate_interval]))\",\n          \"legendFormat\": \"Disk Reads\",\n    \
+    \      \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\": {\n     \
+    \   \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 21,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"WAL Generation\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 40,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum(rate(cnpg_collector_wal_bytes{job=\\\"postgres/juicefs-postgres\\\
+    \"}[$__rate_interval]))\",\n          \"legendFormat\": \"WAL\",\n          \"\
+    refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\"\
+    : {\n          \"unit\": \"Bps\"\n        },\n        \"overrides\": []\n    \
+    \  },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 22,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Database Size\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 40,\n   \
+    \     \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"max by (datname) (cnpg_pg_database_size_bytes{job=\\\"\
+    postgres/juicefs-postgres\\\"})\",\n          \"legendFormat\": \"{{datname}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"bytes\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 23,\n      \"type\": \"timeseries\",\n      \"title\": \"Database\
+    \ Error Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 0,\n        \"y\": 48,\n        \"w\": 12,\n        \"h\": 8\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_deadlocks{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"Deadlocks\",\n          \"refId\": \"A\"\n        },\n        {\n        \
+    \  \"expr\": \"sum(rate(cnpg_pg_stat_database_conflicts{job=\\\"postgres/juicefs-postgres\\\
+    \"}[$__rate_interval]))\",\n          \"legendFormat\": \"Conflicts\",\n     \
+    \     \"refId\": \"B\"\n        },\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_xact_rollback{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"Rollbacks\",\n          \"refId\": \"C\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 24,\n      \"type\": \"timeseries\",\n      \"title\": \"Temporary\
+    \ Data\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n      \
+    \  \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\"\
+    : 12,\n        \"y\": 48,\n        \"w\": 12,\n        \"h\": 8\n      },\n  \
+    \    \"targets\": [\n        {\n          \"expr\": \"sum(rate(cnpg_pg_stat_database_temp_bytes{job=\\\
+    \"postgres/juicefs-postgres\\\"}[$__rate_interval]))\",\n          \"legendFormat\"\
+    : \"Temp Bytes\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"Bps\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 25,\n      \"type\": \"timeseries\",\n      \"title\": \"PostgreSQL\
+    \ Target Health\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 56,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"up{job=\\\"postgres/juicefs-postgres\\\
+    \"}\",\n          \"legendFormat\": \"{{pod}}\",\n          \"refId\": \"A\"\n\
+    \        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n    \
+    \      \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 26,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Recovery State\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 56,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"cnpg_pg_replication_in_recovery{job=\\\"postgres/juicefs-postgres\\\
+    \"}\",\n          \"legendFormat\": \"{{pod}}\",\n          \"refId\": \"A\"\n\
+    \        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n    \
+    \      \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    }\n  ]\n}"

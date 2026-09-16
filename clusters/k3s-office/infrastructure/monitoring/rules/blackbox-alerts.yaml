@@ -1,0 +1,41 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: blackbox-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: blackbox.rules
+      rules:
+        - alert: BlackboxProbeFailed
+          expr: probe_success == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Blackbox 服务探测失败"
+            description: "目标 {{ $labels.instance }} 已连续 2 分钟探测失败，请检查目标服务及网络连通性。探测任务：{{ $labels.job }}。"
+
+        - alert: BlackboxSSLCertificateExpiringSoon
+          expr: |
+            (probe_ssl_earliest_cert_expiry - time()) < 30 * 24 * 3600
+            and
+            (probe_ssl_earliest_cert_expiry - time()) >= 7 * 24 * 3600
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "HTTPS 证书即将过期"
+            description: "目标 {{ $labels.instance }} 的 HTTPS 证书剩余有效期不足 30 天，请检查证书续期状态。"
+
+        - alert: BlackboxSSLCertificateExpiringCritical
+          expr: |
+            (probe_ssl_earliest_cert_expiry - time()) < 7 * 24 * 3600
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "HTTPS 证书即将过期"
+            description: "目标 {{ $labels.instance }} 的 HTTPS 证书剩余有效期不足 7 天，请立即检查并处理证书续期。"

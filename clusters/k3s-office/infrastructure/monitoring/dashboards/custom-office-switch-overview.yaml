@@ -1,0 +1,334 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-office-switch-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-office-switch-overview.json: "{\n  \"annotations\": {\n    \"list\": []\n\
+    \  },\n  \"editable\": false,\n  \"graphTooltip\": 1,\n  \"id\": null,\n  \"links\"\
+    : [],\n  \"liveNow\": false,\n  \"panels\": [\n    {\n      \"id\": 1,\n     \
+    \ \"type\": \"stat\",\n      \"title\": \"SNMP Target\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 0,\n      \
+    \  \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n  \
+    \        \"expr\": \"count(ifOperStatus{target=\\\"$switch\\\"}) > bool 0\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\",\n          \"mappings\"\
+    : [\n            {\n              \"type\": \"value\",\n              \"options\"\
+    : {\n                \"0\": {\n                  \"text\": \"DOWN\"\n        \
+    \        },\n                \"1\": {\n                  \"text\": \"UP\"\n  \
+    \              }\n              }\n            }\n          ]\n        },\n  \
+    \      \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 2,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Physical Ports\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 4,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"count(ifOperStatus{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"})\",\n    \
+    \      \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n     \
+    \   \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 3,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Ports UP\",\n      \"datasource\": {\n        \"type\":\
+    \ \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 8,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"count(ifOperStatus{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"} == 1)\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 4,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Ports DOWN\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 12,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"count(ifOperStatus{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"} == 2)\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 5,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"RX Errors / sec\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 16,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(rate(ifInErrors{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"}[5m]))\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 6,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"TX Errors / sec\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 20,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(rate(ifOutErrors{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"}[5m]))\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 7,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"Interface Traffic\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 12,\n\
+    \        \"h\": 9\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"rate(ifHCInOctets{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"}[5m]) * 8 / 1000000\",\n          \"refId\": \"A\",\n          \"legendFormat\"\
+    : \"RX {{ifName}}\"\n        },\n        {\n          \"expr\": \"rate(ifHCOutOctets{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ 1000000\",\n          \"refId\": \"B\",\n          \"legendFormat\": \"TX {{ifName}}\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"Mbps\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"table\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": [\n            \"\
+    lastNotNull\"\n          ]\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"desc\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 8,\n      \"type\": \"timeseries\",\n      \"title\": \"Interface\
+    \ Utilization\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 12,\n        \"y\": 4,\n        \"w\": 12,\n        \"h\": 9\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"100 * rate(ifHCInOctets{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ (ifHighSpeed{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"} * 1000000)\",\n          \"refId\": \"A\",\n          \"legendFormat\": \"\
+    RX {{ifName}}\"\n        },\n        {\n          \"expr\": \"100 * rate(ifHCOutOctets{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ (ifHighSpeed{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"} * 1000000)\",\n          \"refId\": \"B\",\n          \"legendFormat\": \"\
+    TX {{ifName}}\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\"\
+    : {\n          \"unit\": \"percent\"\n        },\n        \"overrides\": []\n\
+    \      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"table\",\n          \"placement\": \"bottom\",\n          \"calcs\": [\n \
+    \           \"lastNotNull\"\n          ]\n        },\n        \"tooltip\": {\n\
+    \          \"mode\": \"multi\",\n          \"sort\": \"desc\"\n        }\n   \
+    \   }\n    },\n    {\n      \"id\": 9,\n      \"type\": \"timeseries\",\n    \
+    \  \"title\": \"Interface Errors\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 13,\n        \"w\": 12,\n        \"h\"\
+    : 8\n      },\n      \"targets\": [\n        {\n          \"expr\": \"rate(ifInErrors{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n\
+    \          \"refId\": \"A\",\n          \"legendFormat\": \"RX {{ifName}}\"\n\
+    \        },\n        {\n          \"expr\": \"rate(ifOutErrors{target=\\\"$switch\\\
+    \",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n          \"\
+    refId\": \"B\",\n          \"legendFormat\": \"TX {{ifName}}\"\n        }\n  \
+    \    ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\"\
+    : \"ops\"\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"legend\": {\n          \"displayMode\": \"table\",\n          \"\
+    placement\": \"bottom\",\n          \"calcs\": [\n            \"lastNotNull\"\n\
+    \          ]\n        },\n        \"tooltip\": {\n          \"mode\": \"multi\"\
+    ,\n          \"sort\": \"desc\"\n        }\n      }\n    },\n    {\n      \"id\"\
+    : 10,\n      \"type\": \"timeseries\",\n      \"title\": \"Interface Discards\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 13,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"rate(ifInDiscards{target=\\\"$switch\\\"\
+    ,ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n          \"refId\"\
+    : \"A\",\n          \"legendFormat\": \"RX {{ifName}}\"\n        },\n        {\n\
+    \          \"expr\": \"rate(ifOutDiscards{target=\\\"$switch\\\",ifName=~\\\"\
+    (GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n          \"refId\": \"B\"\
+    ,\n          \"legendFormat\": \"TX {{ifName}}\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"ops\"\n     \
+    \   },\n        \"overrides\": []\n      },\n      \"options\": {\n        \"\
+    legend\": {\n          \"displayMode\": \"table\",\n          \"placement\": \"\
+    bottom\",\n          \"calcs\": [\n            \"lastNotNull\"\n          ]\n\
+    \        },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n        \
+    \  \"sort\": \"desc\"\n        }\n      }\n    },\n    {\n      \"id\": 11,\n\
+    \      \"type\": \"table\",\n      \"title\": \"Interface Status Table\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n      \
+    \  \"y\": 21,\n        \"w\": 24,\n        \"h\": 12\n      },\n      \"targets\"\
+    : [\n        {\n          \"refId\": \"A\",\n          \"expr\": \"ifOperStatus{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}\",\n     \
+    \     \"format\": \"table\",\n          \"instant\": true\n        },\n      \
+    \  {\n          \"refId\": \"B\",\n          \"expr\": \"ifAdminStatus{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}\",\n     \
+    \     \"format\": \"table\",\n          \"instant\": true\n        },\n      \
+    \  {\n          \"refId\": \"C\",\n          \"expr\": \"ifHighSpeed{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}\",\n     \
+    \     \"format\": \"table\",\n          \"instant\": true\n        },\n      \
+    \  {\n          \"refId\": \"D\",\n          \"expr\": \"rate(ifHCInOctets{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ 1000000\",\n          \"format\": \"table\",\n          \"instant\": true\n\
+    \        },\n        {\n          \"refId\": \"E\",\n          \"expr\": \"rate(ifHCOutOctets{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ 1000000\",\n          \"format\": \"table\",\n          \"instant\": true\n\
+    \        },\n        {\n          \"refId\": \"F\",\n          \"expr\": \"100\
+    \ * rate(ifHCInOctets{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"}[5m]) * 8 / (ifHighSpeed{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"} * 1000000)\",\n          \"format\": \"table\",\n          \"instant\": true\n\
+    \        },\n        {\n          \"refId\": \"G\",\n          \"expr\": \"100\
+    \ * rate(ifHCOutOctets{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"}[5m]) * 8 / (ifHighSpeed{target=\\\"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\
+    \"} * 1000000)\",\n          \"format\": \"table\",\n          \"instant\": true\n\
+    \        },\n        {\n          \"refId\": \"H\",\n          \"expr\": \"rate(ifInErrors{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n\
+    \          \"format\": \"table\",\n          \"instant\": true\n        },\n \
+    \       {\n          \"refId\": \"I\",\n          \"expr\": \"rate(ifOutErrors{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n\
+    \          \"format\": \"table\",\n          \"instant\": true\n        },\n \
+    \       {\n          \"refId\": \"J\",\n          \"expr\": \"rate(ifInDiscards{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n\
+    \          \"format\": \"table\",\n          \"instant\": true\n        },\n \
+    \       {\n          \"refId\": \"K\",\n          \"expr\": \"rate(ifOutDiscards{target=\\\
+    \"$switch\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}[5m])\",\n\
+    \          \"format\": \"table\",\n          \"instant\": true\n        }\n  \
+    \    ],\n      \"transformations\": [\n        {\n          \"id\": \"joinByField\"\
+    ,\n          \"options\": {\n            \"byField\": \"ifName\",\n          \
+    \  \"mode\": \"outer\"\n          }\n        },\n        {\n          \"id\":\
+    \ \"organize\",\n          \"options\": {\n            \"excludeByName\": {\n\
+    \              \"Time 1\": true,\n              \"__name__ 1\": true,\n      \
+    \        \"container 1\": true,\n              \"endpoint 1\": true,\n       \
+    \       \"ifDescr 1\": true,\n              \"ifIndex 1\": true,\n           \
+    \   \"instance 1\": true,\n              \"job 1\": true,\n              \"namespace\
+    \ 1\": true,\n              \"pod 1\": true,\n              \"service 1\": true,\n\
+    \              \"switch 1\": true,\n              \"target 1\": true,\n      \
+    \        \"Time 2\": true,\n              \"__name__ 2\": true,\n            \
+    \  \"container 2\": true,\n              \"endpoint 2\": true,\n             \
+    \ \"ifDescr 2\": true,\n              \"ifIndex 2\": true,\n              \"instance\
+    \ 2\": true,\n              \"job 2\": true,\n              \"namespace 2\": true,\n\
+    \              \"pod 2\": true,\n              \"service 2\": true,\n        \
+    \      \"switch 2\": true,\n              \"target 2\": true,\n              \"\
+    Time 3\": true,\n              \"__name__ 3\": true,\n              \"container\
+    \ 3\": true,\n              \"endpoint 3\": true,\n              \"ifDescr 3\"\
+    : true,\n              \"ifIndex 3\": true,\n              \"instance 3\": true,\n\
+    \              \"job 3\": true,\n              \"namespace 3\": true,\n      \
+    \        \"pod 3\": true,\n              \"service 3\": true,\n              \"\
+    switch 3\": true,\n              \"target 3\": true,\n              \"Time 4\"\
+    : true,\n              \"__name__ 4\": true,\n              \"container 4\": true,\n\
+    \              \"endpoint 4\": true,\n              \"ifDescr 4\": true,\n   \
+    \           \"ifIndex 4\": true,\n              \"instance 4\": true,\n      \
+    \        \"job 4\": true,\n              \"namespace 4\": true,\n            \
+    \  \"pod 4\": true,\n              \"service 4\": true,\n              \"switch\
+    \ 4\": true,\n              \"target 4\": true,\n              \"Time 5\": true,\n\
+    \              \"__name__ 5\": true,\n              \"container 5\": true,\n \
+    \             \"endpoint 5\": true,\n              \"ifDescr 5\": true,\n    \
+    \          \"ifIndex 5\": true,\n              \"instance 5\": true,\n       \
+    \       \"job 5\": true,\n              \"namespace 5\": true,\n             \
+    \ \"pod 5\": true,\n              \"service 5\": true,\n              \"switch\
+    \ 5\": true,\n              \"target 5\": true,\n              \"Time 6\": true,\n\
+    \              \"__name__ 6\": true,\n              \"container 6\": true,\n \
+    \             \"endpoint 6\": true,\n              \"ifDescr 6\": true,\n    \
+    \          \"ifIndex 6\": true,\n              \"instance 6\": true,\n       \
+    \       \"job 6\": true,\n              \"namespace 6\": true,\n             \
+    \ \"pod 6\": true,\n              \"service 6\": true,\n              \"switch\
+    \ 6\": true,\n              \"target 6\": true,\n              \"Time 7\": true,\n\
+    \              \"__name__ 7\": true,\n              \"container 7\": true,\n \
+    \             \"endpoint 7\": true,\n              \"ifDescr 7\": true,\n    \
+    \          \"ifIndex 7\": true,\n              \"instance 7\": true,\n       \
+    \       \"job 7\": true,\n              \"namespace 7\": true,\n             \
+    \ \"pod 7\": true,\n              \"service 7\": true,\n              \"switch\
+    \ 7\": true,\n              \"target 7\": true,\n              \"Time 8\": true,\n\
+    \              \"__name__ 8\": true,\n              \"container 8\": true,\n \
+    \             \"endpoint 8\": true,\n              \"ifDescr 8\": true,\n    \
+    \          \"ifIndex 8\": true,\n              \"instance 8\": true,\n       \
+    \       \"job 8\": true,\n              \"namespace 8\": true,\n             \
+    \ \"pod 8\": true,\n              \"service 8\": true,\n              \"switch\
+    \ 8\": true,\n              \"target 8\": true,\n              \"Time 9\": true,\n\
+    \              \"__name__ 9\": true,\n              \"container 9\": true,\n \
+    \             \"endpoint 9\": true,\n              \"ifDescr 9\": true,\n    \
+    \          \"ifIndex 9\": true,\n              \"instance 9\": true,\n       \
+    \       \"job 9\": true,\n              \"namespace 9\": true,\n             \
+    \ \"pod 9\": true,\n              \"service 9\": true,\n              \"switch\
+    \ 9\": true,\n              \"target 9\": true,\n              \"Time 10\": true,\n\
+    \              \"__name__ 10\": true,\n              \"container 10\": true,\n\
+    \              \"endpoint 10\": true,\n              \"ifDescr 10\": true,\n \
+    \             \"ifIndex 10\": true,\n              \"instance 10\": true,\n  \
+    \            \"job 10\": true,\n              \"namespace 10\": true,\n      \
+    \        \"pod 10\": true,\n              \"service 10\": true,\n            \
+    \  \"switch 10\": true,\n              \"target 10\": true,\n              \"\
+    Time 11\": true,\n              \"__name__ 11\": true,\n              \"container\
+    \ 11\": true,\n              \"endpoint 11\": true,\n              \"ifDescr 11\"\
+    : true,\n              \"ifIndex 11\": true,\n              \"instance 11\": true,\n\
+    \              \"job 11\": true,\n              \"namespace 11\": true,\n    \
+    \          \"pod 11\": true,\n              \"service 11\": true,\n          \
+    \    \"switch 11\": true,\n              \"target 11\": true,\n              \"\
+    ifAlias 2\": true,\n              \"ifAlias 3\": true,\n              \"ifAlias\
+    \ 4\": true,\n              \"ifAlias 5\": true,\n              \"ifAlias 6\"\
+    : true,\n              \"ifAlias 7\": true,\n              \"ifAlias 8\": true,\n\
+    \              \"ifAlias 9\": true,\n              \"ifAlias 10\": true,\n   \
+    \           \"ifAlias 11\": true\n            },\n            \"renameByName\"\
+    : {\n              \"ifName\": \"Port\",\n              \"ifAlias 1\": \"Alias\"\
+    ,\n              \"Value #A\": \"Oper\",\n              \"Value #B\": \"Admin\"\
+    ,\n              \"Value #C\": \"Speed (Mbps)\",\n              \"Value #D\":\
+    \ \"RX Mbps\",\n              \"Value #E\": \"TX Mbps\",\n              \"Value\
+    \ #F\": \"RX Util %\",\n              \"Value #G\": \"TX Util %\",\n         \
+    \     \"Value #H\": \"RX Errors/s\",\n              \"Value #I\": \"TX Errors/s\"\
+    ,\n              \"Value #J\": \"RX Discards/s\",\n              \"Value #K\"\
+    : \"TX Discards/s\"\n            },\n            \"indexByName\": {\n        \
+    \      \"Port\": 0,\n              \"Alias\": 1,\n              \"Speed (Mbps)\"\
+    : 2,\n              \"Admin\": 3,\n              \"Oper\": 4,\n              \"\
+    RX Mbps\": 5,\n              \"TX Mbps\": 6,\n              \"RX Util %\": 7,\n\
+    \              \"TX Util %\": 8,\n              \"RX Errors/s\": 9,\n        \
+    \      \"TX Errors/s\": 10,\n              \"RX Discards/s\": 11,\n          \
+    \    \"TX Discards/s\": 12\n            }\n          }\n        }\n      ],\n\
+    \      \"fieldConfig\": {\n        \"defaults\": {},\n        \"overrides\": [\n\
+    \          {\n            \"matcher\": {\n              \"id\": \"byName\",\n\
+    \              \"options\": \"Oper\"\n            },\n            \"properties\"\
+    : [\n              {\n                \"id\": \"mappings\",\n                \"\
+    value\": [\n                  {\n                    \"type\": \"value\",\n  \
+    \                  \"options\": {\n                      \"1\": {\n          \
+    \              \"text\": \"UP\"\n                      },\n                  \
+    \    \"2\": {\n                        \"text\": \"DOWN\"\n                  \
+    \    },\n                      \"3\": {\n                        \"text\": \"\
+    TESTING\"\n                      }\n                    }\n                  }\n\
+    \                ]\n              }\n            ]\n          },\n          {\n\
+    \            \"matcher\": {\n              \"id\": \"byName\",\n             \
+    \ \"options\": \"Admin\"\n            },\n            \"properties\": [\n    \
+    \          {\n                \"id\": \"mappings\",\n                \"value\"\
+    : [\n                  {\n                    \"type\": \"value\",\n         \
+    \           \"options\": {\n                      \"1\": {\n                 \
+    \       \"text\": \"UP\"\n                      },\n                      \"2\"\
+    : {\n                        \"text\": \"DOWN\"\n                      },\n  \
+    \                    \"3\": {\n                        \"text\": \"TESTING\"\n\
+    \                      }\n                    }\n                  }\n       \
+    \         ]\n              }\n            ]\n          },\n          {\n     \
+    \       \"matcher\": {\n              \"id\": \"byName\",\n              \"options\"\
+    : \"RX Mbps\"\n            },\n            \"properties\": [\n              {\n\
+    \                \"id\": \"unit\",\n                \"value\": \"Mbps\"\n    \
+    \          },\n              {\n                \"id\": \"decimals\",\n      \
+    \          \"value\": 3\n              }\n            ]\n          },\n      \
+    \    {\n            \"matcher\": {\n              \"id\": \"byName\",\n      \
+    \        \"options\": \"TX Mbps\"\n            },\n            \"properties\"\
+    : [\n              {\n                \"id\": \"unit\",\n                \"value\"\
+    : \"Mbps\"\n              },\n              {\n                \"id\": \"decimals\"\
+    ,\n                \"value\": 3\n              }\n            ]\n          },\n\
+    \          {\n            \"matcher\": {\n              \"id\": \"byName\",\n\
+    \              \"options\": \"RX Util %\"\n            },\n            \"properties\"\
+    : [\n              {\n                \"id\": \"unit\",\n                \"value\"\
+    : \"percent\"\n              },\n              {\n                \"id\": \"decimals\"\
+    ,\n                \"value\": 3\n              }\n            ]\n          },\n\
+    \          {\n            \"matcher\": {\n              \"id\": \"byName\",\n\
+    \              \"options\": \"TX Util %\"\n            },\n            \"properties\"\
+    : [\n              {\n                \"id\": \"unit\",\n                \"value\"\
+    : \"percent\"\n              },\n              {\n                \"id\": \"decimals\"\
+    ,\n                \"value\": 3\n              }\n            ]\n          }\n\
+    \        ]\n      },\n      \"options\": {\n        \"showHeader\": true,\n  \
+    \      \"cellHeight\": \"sm\"\n      }\n    }\n  ],\n  \"refresh\": \"30s\",\n\
+    \  \"schemaVersion\": 41,\n  \"tags\": [\n    \"custom\",\n    \"network\",\n\
+    \    \"snmp\"\n  ],\n  \"templating\": {\n    \"list\": [\n      {\n        \"\
+    name\": \"DS_PROMETHEUS\",\n        \"type\": \"datasource\",\n        \"label\"\
+    : \"Prometheus\",\n        \"query\": \"prometheus\",\n        \"current\": {},\n\
+    \        \"hide\": 0,\n        \"refresh\": 1\n      },\n      {\n        \"name\"\
+    : \"switch\",\n        \"label\": \"Switch\",\n        \"type\": \"query\",\n\
+    \        \"datasource\": {\n          \"type\": \"prometheus\",\n          \"\
+    uid\": \"${DS_PROMETHEUS}\"\n        },\n        \"definition\": \"label_values(ifOperStatus{ifName=~\\\
+    \"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"}, target)\",\n        \"query\": \"\
+    label_values(ifOperStatus{ifName=~\\\"(GigabitEthernet|XGigabitEthernet|GE|10GE|Ten-GigabitEthernet).*\\\"\
+    }, target)\",\n        \"refresh\": 1,\n        \"sort\": 1,\n        \"multi\"\
+    : false,\n        \"includeAll\": false,\n        \"current\": {\n          \"\
+    selected\": true,\n          \"text\": \"spine04\",\n          \"value\": \"spine04\"\
+    \n        }\n      }\n    ]\n  },\n  \"time\": {\n    \"from\": \"now-6h\",\n\
+    \    \"to\": \"now\"\n  },\n  \"timezone\": \"browser\",\n  \"title\": \"Custom\
+    \ - Office Switch Overview\",\n  \"uid\": \"custom-office-switch-overview\",\n\
+    \  \"version\": 1\n}"

@@ -1,0 +1,201 @@
+---
+# Source: prometheus-snmp-exporter/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:    
+    helm.sh/chart: prometheus-snmp-exporter-9.18.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: prometheus-snmp-exporter
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: snmp-exporter
+    app.kubernetes.io/version: "v0.30.1"
+  name: snmp-exporter-prometheus-snmp-exporter
+  namespace: monitoring
+---
+# Source: prometheus-snmp-exporter/templates/role.yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: snmp-exporter-prometheus-snmp-exporter
+  namespace: monitoring
+  labels:    
+    helm.sh/chart: prometheus-snmp-exporter-9.18.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: prometheus-snmp-exporter
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: snmp-exporter
+    app.kubernetes.io/version: "v0.30.1"
+rules:
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["get"]
+---
+# Source: prometheus-snmp-exporter/templates/rolebinding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: snmp-exporter-prometheus-snmp-exporter
+  namespace: monitoring
+  labels:    
+    helm.sh/chart: prometheus-snmp-exporter-9.18.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: prometheus-snmp-exporter
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: snmp-exporter
+    app.kubernetes.io/version: "v0.30.1"
+subjects:
+- kind: ServiceAccount
+  name: snmp-exporter-prometheus-snmp-exporter
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: snmp-exporter-prometheus-snmp-exporter
+---
+# Source: prometheus-snmp-exporter/templates/service.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: snmp-exporter-prometheus-snmp-exporter
+  namespace: monitoring
+  labels:    
+    helm.sh/chart: prometheus-snmp-exporter-9.18.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: prometheus-snmp-exporter
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: snmp-exporter
+    app.kubernetes.io/version: "v0.30.1"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9116
+      protocol: TCP
+  selector:    
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: snmp-exporter
+---
+# Source: prometheus-snmp-exporter/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snmp-exporter-prometheus-snmp-exporter
+  namespace: monitoring
+  labels:    
+    helm.sh/chart: prometheus-snmp-exporter-9.18.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: prometheus-snmp-exporter
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: snmp-exporter
+    app.kubernetes.io/version: "v0.30.1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:      
+      app.kubernetes.io/name: prometheus-snmp-exporter
+      app.kubernetes.io/instance: snmp-exporter
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:        
+        helm.sh/chart: prometheus-snmp-exporter-9.18.0
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: metrics
+        app.kubernetes.io/part-of: prometheus-snmp-exporter
+        app.kubernetes.io/name: prometheus-snmp-exporter
+        app.kubernetes.io/instance: snmp-exporter
+        app.kubernetes.io/version: "v0.30.1"
+      annotations:
+        {}
+    spec:
+      restartPolicy: Always
+      serviceAccountName: snmp-exporter-prometheus-snmp-exporter
+      containers:
+        - name: snmp-exporter
+          image: "quay.io/prometheus/snmp-exporter:v0.30.1"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+          args:
+            - --config.file=/etc/snmp_exporter/snmp.yml
+            - --config.file=/run/secrets/snmp-exporter/snmp.yml
+          resources:
+            {}
+          ports:
+            - containerPort: 9116
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http
+          volumeMounts:
+            - name: snmp-exporter-config
+              mountPath: /run/secrets/snmp-exporter
+              subPath: 
+              readOnly: true
+      volumes:
+        - name: snmp-exporter-config
+          secret:
+            secretName: snmp-exporter-config
+            defaultMode:
+---
+# Source: prometheus-snmp-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: snmp-exporter-prometheus-snmp-exporter-spine04
+  namespace: monitoring
+  labels:    
+    helm.sh/chart: prometheus-snmp-exporter-9.18.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: prometheus-snmp-exporter
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: snmp-exporter
+    app.kubernetes.io/version: "v0.30.1"
+    release: "kube-prometheus-stack"
+spec:
+  endpoints:
+  - port: http
+    honorLabels: true
+    path: /snmp
+    interval: 30s
+    scrapeTimeout: 10s
+    params:
+      module:
+      - if_mib
+      auth: [spine04_v2]
+      target:
+      - 192.168.10.8
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: 192.168.10.8
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: spine04
+        action: replace
+      - targetLabel: switch
+        replacement: "Spine04"
+        action: replace
+  jobLabel: "snmp-exporter"
+  selector:
+    matchLabels:      
+      app.kubernetes.io/name: prometheus-snmp-exporter
+      app.kubernetes.io/instance: snmp-exporter

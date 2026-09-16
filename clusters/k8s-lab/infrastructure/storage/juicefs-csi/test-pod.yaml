@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: juicefs-test
+  namespace: default
+spec:
+  containers:
+    - name: test
+      image: busybox:1.36
+      command:
+        - /bin/sh
+        - -c
+        - |
+          echo "JuiceFS cross-cluster test $(date)" > /data/test.txt
+          sleep 36000
+      volumeMounts:
+        - name: juicefs
+          mountPath: /data
+  volumes:
+    - name: juicefs
+      persistentVolumeClaim:
+        claimName: juicefs-test-pvc

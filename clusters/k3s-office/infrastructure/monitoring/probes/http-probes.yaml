@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: blackbox-http
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  jobName: blackbox-http
+  interval: 60s
+  scrapeTimeout: 15s
+  module: http_2xx
+  prober:
+    url: blackbox-exporter-prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+      - https://hb.k3s.hlqs.top
+      - https://gf.k3s.hlqs.top
+      - https://pm.k3s.hlqs.top
+      - http://192.168.13.210:9000/minio/health/live

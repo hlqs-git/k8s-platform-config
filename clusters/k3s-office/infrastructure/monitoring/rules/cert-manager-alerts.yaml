@@ -1,0 +1,68 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cert-manager-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: cert-manager.rules
+      rules:
+        - alert: CertManagerCertificateNotReady
+          expr: certmanager_certificate_ready_status{condition="True"} == 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "cert-manager 证书状态异常"
+            description: "证书 {{ $labels.exported_namespace }}/{{ $labels.name }} 已连续 10 分钟未处于 Ready 状态，请检查证书签发、续期状态以及 Issuer 配置。"
+
+        - alert: CertManagerCertificateExpiringSoon
+          expr: |
+            (certmanager_certificate_expiration_timestamp_seconds - time()) < 30 * 24 * 3600
+            and
+            (certmanager_certificate_expiration_timestamp_seconds - time()) >= 7 * 24 * 3600
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "cert-manager 证书即将过期"
+            description: "证书 {{ $labels.exported_namespace }}/{{ $labels.name }} 剩余有效期不足 30 天，请检查 cert-manager 自动续期是否正常。Issuer：{{ $labels.issuer_name }}。"
+
+        - alert: CertManagerCertificateExpiringCritical
+          expr: |
+            (certmanager_certificate_expiration_timestamp_seconds - time()) < 7 * 24 * 3600
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "cert-manager 证书即将过期"
+            description: "证书 {{ $labels.exported_namespace }}/{{ $labels.name }} 剩余有效期不足 7 天，请立即检查并处理证书续期。Issuer：{{ $labels.issuer_name }}。"
+
+        - alert: CertManagerIssuerNotReady
+          expr: certmanager_issuer_ready_status{condition="True"} == 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "cert-manager Issuer 状态异常"
+            description: "Issuer {{ $labels.exported_namespace }}/{{ $labels.name }} 已连续 10 分钟未处于 Ready 状态，请检查 Issuer 配置及相关依赖。"
+
+        - alert: CertManagerClusterIssuerNotReady
+          expr: certmanager_clusterissuer_ready_status{condition="True"} == 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "cert-manager ClusterIssuer 状态异常"
+            description: "ClusterIssuer {{ $labels.name }} 已连续 10 分钟未处于 Ready 状态，请检查 ClusterIssuer 配置及证书签发服务。"
+
+        - alert: CertManagerControllerSyncErrors
+          expr: increase(certmanager_controller_sync_error_count[10m]) > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "cert-manager Controller 出现同步错误"
+            description: "cert-manager 控制器 {{ $labels.controller }} 在最近 10 分钟内出现新的同步错误，请检查 cert-manager Controller 日志及相关资源状态。"

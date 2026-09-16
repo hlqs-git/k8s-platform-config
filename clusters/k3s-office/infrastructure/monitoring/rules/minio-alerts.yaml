@@ -1,0 +1,93 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: minio-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: minio.rules
+      rules:
+        - alert: MinIOClusterUnhealthy
+          expr: minio_cluster_health_status == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MinIO 集群健康状态异常"
+            description: "MinIO 集群已连续 5 分钟处于非健康状态。Server：{{ $labels.server }}，命名空间：{{ $labels.namespace }}。"
+
+        - alert: MinIONodeOffline
+          expr: minio_cluster_nodes_offline_total > 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MinIO 存在离线节点"
+            description: "MinIO 集群已连续 5 分钟存在离线节点，当前离线节点数约为 {{ $value }}。Server：{{ $labels.server }}。"
+
+        - alert: MinIODriveOffline
+          expr: minio_cluster_drive_offline_total > 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MinIO 存在离线磁盘"
+            description: "MinIO 集群已连续 5 分钟存在离线 Drive，当前离线 Drive 数约为 {{ $value }}。Server：{{ $labels.server }}。"
+
+        - alert: MinIOCapacityUsageHigh
+          expr: |
+            (
+              100 * (
+                1 -
+                minio_cluster_capacity_usable_free_bytes
+                / minio_cluster_capacity_usable_total_bytes
+              )
+            ) > 80
+            and
+            (
+              100 * (
+                1 -
+                minio_cluster_capacity_usable_free_bytes
+                / minio_cluster_capacity_usable_total_bytes
+              )
+            ) <= 90
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "MinIO 可用存储容量使用率较高"
+            description: "MinIO usable capacity 使用率已超过 80%，当前约为 {{ printf \"%.1f\" $value }}%。"
+
+        - alert: MinIOCapacityUsageCritical
+          expr: |
+            (
+              100 * (
+                1 -
+                minio_cluster_capacity_usable_free_bytes
+                / minio_cluster_capacity_usable_total_bytes
+              )
+            ) > 90
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MinIO 可用存储容量即将耗尽"
+            description: "MinIO usable capacity 使用率已超过 90%，当前约为 {{ printf \"%.1f\" $value }}%，请尽快清理数据或扩容。"
+
+        - alert: MinIOHealingErrorsDetected
+          expr: increase(minio_heal_objects_errors_total[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "MinIO Healing 出现新错误"
+            description: "MinIO Server {{ $labels.server }} 在最近 10 分钟内出现新的 Healing 错误，新增错误数约为 {{ $value }}。"
+
+        - alert: MinIOS3ServerErrorsDetected
+          expr: increase(minio_s3_requests_5xx_errors_total[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "MinIO S3 请求出现服务端错误"
+            description: "MinIO Server {{ $labels.server }} 的 API {{ $labels.api }} 在最近 10 分钟内出现新的 S3 5xx 错误，新增错误数约为 {{ $value }}。"

@@ -1,0 +1,425 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-minio-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-minio-overview.json: "{\n  \"id\": null,\n  \"uid\": \"custom-minio-overview\"\
+    ,\n  \"title\": \"Custom - MinIO Overview\",\n  \"tags\": [\n    \"custom\",\n\
+    \    \"minio\",\n    \"storage\",\n    \"s3\"\n  ],\n  \"timezone\": \"browser\"\
+    ,\n  \"schemaVersion\": 41,\n  \"version\": 2,\n  \"refresh\": \"30s\",\n  \"\
+    time\": {\n    \"from\": \"now-6h\",\n    \"to\": \"now\"\n  },\n  \"templating\"\
+    : {\n    \"list\": [\n      {\n        \"name\": \"DS_PROMETHEUS\",\n        \"\
+    type\": \"datasource\",\n        \"label\": \"Prometheus\",\n        \"query\"\
+    : \"prometheus\",\n        \"current\": {}\n      }\n    ]\n  },\n  \"panels\"\
+    : [\n    {\n      \"id\": 1,\n      \"type\": \"stat\",\n      \"title\": \"Cluster\
+    \ Health\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n    \
+    \    \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"\
+    x\": 0,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n  \
+    \    \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_health_status{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\",\n  \
+    \        \"mappings\": [\n            {\n              \"type\": \"value\",\n\
+    \              \"options\": {\n                \"0\": {\n                  \"\
+    text\": \"UNHEALTHY\"\n                },\n                \"1\": {\n        \
+    \          \"text\": \"HEALTHY\"\n                }\n              }\n       \
+    \     }\n          ],\n          \"thresholds\": {\n            \"mode\": \"absolute\"\
+    ,\n            \"steps\": [\n              {\n                \"color\": \"red\"\
+    ,\n                \"value\": null\n              },\n              {\n      \
+    \          \"color\": \"green\",\n                \"value\": 1\n             \
+    \ }\n            ]\n          },\n          \"color\": {\n            \"mode\"\
+    : \"thresholds\"\n          }\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 2,\n      \"type\": \"stat\",\n      \"title\":\
+    \ \"Nodes Online\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 4,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_nodes_online_total{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\n   \
+    \     },\n        \"overrides\": []\n      },\n      \"options\": {\n        \"\
+    reduceOptions\": {\n          \"values\": false,\n          \"calcs\": [\n   \
+    \         \"lastNotNull\"\n          ]\n        },\n        \"orientation\": \"\
+    auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"id\"\
+    : 3,\n      \"type\": \"stat\",\n      \"title\": \"Nodes Offline\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 8,\n        \"y\": 0,\n     \
+    \   \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n \
+    \         \"expr\": \"max(minio_cluster_nodes_offline_total{job=\\\"minio-hl\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\",\n          \"thresholds\"\
+    : {\n            \"mode\": \"absolute\",\n            \"steps\": [\n         \
+    \     {\n                \"color\": \"green\",\n                \"value\": null\n\
+    \              },\n              {\n                \"color\": \"yellow\",\n \
+    \               \"value\": 1\n              },\n              {\n            \
+    \    \"color\": \"red\",\n                \"value\": 2\n              }\n    \
+    \        ]\n          },\n          \"color\": {\n            \"mode\": \"thresholds\"\
+    \n          }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 4,\n      \"type\": \"stat\",\n      \"title\": \"Drives Online\",\n   \
+    \   \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n     \
+    \   \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"max(minio_cluster_drive_online_total{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\n   \
+    \     },\n        \"overrides\": []\n      },\n      \"options\": {\n        \"\
+    reduceOptions\": {\n          \"values\": false,\n          \"calcs\": [\n   \
+    \         \"lastNotNull\"\n          ]\n        },\n        \"orientation\": \"\
+    auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"id\"\
+    : 5,\n      \"type\": \"stat\",\n      \"title\": \"Drives Offline\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 16,\n        \"y\": 0,\n    \
+    \    \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"max(minio_cluster_drive_offline_total{job=\\\"minio-hl\\\
+    \"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\",\n          \"thresholds\"\
+    : {\n            \"mode\": \"absolute\",\n            \"steps\": [\n         \
+    \     {\n                \"color\": \"green\",\n                \"value\": null\n\
+    \              },\n              {\n                \"color\": \"yellow\",\n \
+    \               \"value\": 1\n              },\n              {\n            \
+    \    \"color\": \"red\",\n                \"value\": 2\n              }\n    \
+    \        ]\n          },\n          \"color\": {\n            \"mode\": \"thresholds\"\
+    \n          }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 6,\n      \"type\": \"stat\",\n      \"title\": \"Healing Drives\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 20,\n     \
+    \   \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(minio_cluster_health_erasure_set_healing_drives{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\",\n  \
+    \        \"thresholds\": {\n            \"mode\": \"absolute\",\n            \"\
+    steps\": [\n              {\n                \"color\": \"green\",\n         \
+    \       \"value\": null\n              },\n              {\n                \"\
+    color\": \"yellow\",\n                \"value\": 1\n              },\n       \
+    \       {\n                \"color\": \"red\",\n                \"value\": 2\n\
+    \              }\n            ]\n          },\n          \"color\": {\n      \
+    \      \"mode\": \"thresholds\"\n          }\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 7,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Raw Capacity\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n\
+    \      },\n      \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_capacity_raw_total_bytes{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"bytes\",\n  \
+    \        \"color\": {\n            \"mode\": \"fixed\",\n            \"fixedColor\"\
+    : \"green\"\n          }\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 8,\n      \"type\": \"stat\",\n      \"title\":\
+    \ \"Raw Free\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 4,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n      },\n\
+    \      \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_capacity_raw_free_bytes{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"bytes\",\n  \
+    \        \"color\": {\n            \"mode\": \"fixed\",\n            \"fixedColor\"\
+    : \"green\"\n          }\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 9,\n      \"type\": \"stat\",\n      \"title\":\
+    \ \"Usable Capacity\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 8,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_capacity_usable_total_bytes{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"bytes\",\n  \
+    \        \"color\": {\n            \"mode\": \"fixed\",\n            \"fixedColor\"\
+    : \"green\"\n          }\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 10,\n      \"type\": \"stat\",\n      \"title\"\
+    : \"Usable Free\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_capacity_usable_free_bytes{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"bytes\",\n  \
+    \        \"color\": {\n            \"mode\": \"fixed\",\n            \"fixedColor\"\
+    : \"green\"\n          }\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 11,\n      \"type\": \"stat\",\n      \"title\"\
+    : \"Logical Data Stored\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 16,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_usage_total_bytes{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"bytes\",\n  \
+    \        \"color\": {\n            \"mode\": \"fixed\",\n            \"fixedColor\"\
+    : \"green\"\n          }\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 12,\n      \"type\": \"stat\",\n      \"title\"\
+    : \"Usable Space Usage\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 20,\n        \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"100 *\\n(\\n  max(minio_cluster_capacity_usable_total_bytes{job=\\\
+    \"minio-hl\\\"})\\n  -\\n  max(minio_cluster_capacity_usable_free_bytes{job=\\\
+    \"minio-hl\\\"})\\n)\\n/\\nclamp_min(\\n  max(minio_cluster_capacity_usable_total_bytes{job=\\\
+    \"minio-hl\\\"}),\\n  1\\n)\",\n          \"refId\": \"A\"\n        }\n      ],\n\
+    \      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"percent\"\
+    ,\n          \"decimals\": 2,\n          \"thresholds\": {\n            \"mode\"\
+    : \"absolute\",\n            \"steps\": [\n              {\n                \"\
+    color\": \"green\",\n                \"value\": null\n              },\n     \
+    \         {\n                \"color\": \"yellow\",\n                \"value\"\
+    : 75\n              },\n              {\n                \"color\": \"red\",\n\
+    \                \"value\": 90\n              }\n            ]\n          },\n\
+    \          \"color\": {\n            \"mode\": \"thresholds\"\n          }\n \
+    \       },\n        \"overrides\": []\n      },\n      \"options\": {\n      \
+    \  \"reduceOptions\": {\n          \"values\": false,\n          \"calcs\": [\n\
+    \            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 13,\n      \"type\": \"stat\",\n      \"title\": \"Buckets\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 8,\n     \
+    \   \"w\": 6,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n \
+    \         \"expr\": \"max(minio_cluster_bucket_total{job=\\\"minio-hl\\\"})\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\",\n          \"color\"\
+    : {\n            \"mode\": \"fixed\",\n            \"fixedColor\": \"green\"\n\
+    \          }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 14,\n      \"type\": \"stat\",\n      \"title\": \"Objects\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\
+    \n      },\n      \"gridPos\": {\n        \"x\": 6,\n        \"y\": 8,\n     \
+    \   \"w\": 6,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n \
+    \         \"expr\": \"max(minio_cluster_usage_object_total{job=\\\"minio-hl\\\"\
+    })\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\",\n          \"color\"\
+    : {\n            \"mode\": \"fixed\",\n            \"fixedColor\": \"green\"\n\
+    \          }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 15,\n      \"type\": \"stat\",\n      \"title\": \"Object Versions\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 8,\n        \"w\": 6,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"max(minio_cluster_usage_version_total{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\",\n  \
+    \        \"color\": {\n            \"mode\": \"fixed\",\n            \"fixedColor\"\
+    : \"green\"\n          }\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 16,\n      \"type\": \"stat\",\n      \"title\"\
+    : \"Drive Total\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 18,\n        \"y\": 8,\n        \"w\": 6,\n        \"h\": 4\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"max(minio_cluster_drive_total{job=\\\
+    \"minio-hl\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\",\n  \
+    \        \"color\": {\n            \"mode\": \"fixed\",\n            \"fixedColor\"\
+    : \"green\"\n          }\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"reduceOptions\": {\n          \"values\": false,\n\
+    \          \"calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n\
+    \        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\n      }\n\
+    \    },\n    {\n      \"id\": 17,\n      \"type\": \"timeseries\",\n      \"title\"\
+    : \"S3 Request Rate by API\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 12,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (api) (rate(minio_s3_requests_total{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"{{api}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 18,\n      \"type\": \"timeseries\",\n      \"title\": \"S3 Traffic\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 12,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(rate(minio_s3_traffic_received_bytes{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Received\"\
+    ,\n          \"refId\": \"A\"\n        },\n        {\n          \"expr\": \"sum(rate(minio_s3_traffic_sent_bytes{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Sent\",\n\
+    \          \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"Bps\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 19,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"S3 HTTP Error Rate\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n      \
+    \  \"y\": 20,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(rate(minio_s3_requests_4xx_errors_total{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"4xx\",\n\
+    \          \"refId\": \"A\"\n        },\n        {\n          \"expr\": \"sum(rate(minio_s3_requests_5xx_errors_total{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"5xx\",\n\
+    \          \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 20,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"S3 Inflight Requests\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 20,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum by (api) (minio_s3_requests_inflight_total{job=\\\
+    \"minio-hl\\\"})\",\n          \"legendFormat\": \"{{api}}\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 21,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Erasure Set Status\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n      \
+    \  \"y\": 28,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"minio_cluster_health_erasure_set_status{job=\\\
+    \"minio-hl\\\"}\",\n          \"legendFormat\": \"Pool {{pool}} / Set {{set}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 22,\n      \"type\": \"timeseries\",\n      \"title\": \"Erasure\
+    \ Set Online Drives\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 12,\n        \"y\": 28,\n        \"w\": 12,\n        \"h\": 8\n \
+    \     },\n      \"targets\": [\n        {\n          \"expr\": \"minio_cluster_health_erasure_set_online_drives{job=\\\
+    \"minio-hl\\\"}\",\n          \"legendFormat\": \"Pool {{pool}} / Set {{set}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 23,\n      \"type\": \"timeseries\",\n      \"title\": \"Erasure\
+    \ Read / Write Quorum\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 36,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"minio_cluster_health_erasure_set_read_quorum{job=\\\
+    \"minio-hl\\\"}\",\n          \"legendFormat\": \"Read Quorum - Pool {{pool}}\
+    \ Set {{set}}\",\n          \"refId\": \"A\"\n        },\n        {\n        \
+    \  \"expr\": \"minio_cluster_health_erasure_set_write_quorum{job=\\\"minio-hl\\\
+    \"}\",\n          \"legendFormat\": \"Write Quorum - Pool {{pool}} Set {{set}}\"\
+    ,\n          \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 24,\n      \"type\": \"timeseries\",\n      \"title\": \"Healing\
+    \ Activity\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n  \
+    \      \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n       \
+    \ \"x\": 12,\n        \"y\": 36,\n        \"w\": 12,\n        \"h\": 8\n     \
+    \ },\n      \"targets\": [\n        {\n          \"expr\": \"sum(rate(minio_heal_objects_total{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Objects\
+    \ Checked\",\n          \"refId\": \"A\"\n        },\n        {\n          \"\
+    expr\": \"sum(rate(minio_heal_objects_heal_total{job=\\\"minio-hl\\\"}[$__rate_interval]))\"\
+    ,\n          \"legendFormat\": \"Objects Healed\",\n          \"refId\": \"B\"\
+    \n        },\n        {\n          \"expr\": \"sum(rate(minio_heal_objects_errors_total{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Heal Errors\"\
+    ,\n          \"refId\": \"C\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 25,\n      \"type\": \"timeseries\",\n      \"title\": \"Inter-node\
+    \ Traffic\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n   \
+    \     \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"\
+    x\": 0,\n        \"y\": 44,\n        \"w\": 12,\n        \"h\": 8\n      },\n\
+    \      \"targets\": [\n        {\n          \"expr\": \"sum(rate(minio_inter_node_traffic_received_bytes{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Received\"\
+    ,\n          \"refId\": \"A\"\n        },\n        {\n          \"expr\": \"sum(rate(minio_inter_node_traffic_sent_bytes{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Sent\",\n\
+    \          \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"Bps\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 26,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Inter-node Errors\",\n   \
+    \   \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n     \
+    \   \"y\": 44,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(rate(minio_inter_node_traffic_errors_total{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"Traffic\
+    \ Errors\",\n          \"refId\": \"A\"\n        },\n        {\n          \"expr\"\
+    : \"sum(rate(minio_inter_node_traffic_dial_errors{job=\\\"minio-hl\\\"}[$__rate_interval]))\"\
+    ,\n          \"legendFormat\": \"Dial Errors\",\n          \"refId\": \"B\"\n\
+    \        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n    \
+    \      \"unit\": \"ops\"\n        },\n        \"overrides\": []\n      },\n  \
+    \    \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 27,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"MinIO Memory by Server\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 52,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"max by (server) (minio_node_process_resident_memory_bytes{job=\\\
+    \"minio-hl\\\"})\",\n          \"legendFormat\": \"{{server}}\",\n          \"\
+    refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\"\
+    : {\n          \"unit\": \"bytes\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 28,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"MinIO CPU by Server\",\n \
+    \     \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n     \
+    \   \"y\": 52,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum by (server) (rate(minio_node_process_cpu_total_seconds{job=\\\
+    \"minio-hl\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"{{server}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"cores\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 29,\n      \"type\": \"timeseries\",\n      \"title\": \"File Descriptors\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n  \
+    \      \"y\": 60,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"max by (server) (minio_node_file_descriptor_open_total{job=\\\
+    \"minio-hl\\\"})\",\n          \"legendFormat\": \"Open - {{server}}\",\n    \
+    \      \"refId\": \"A\"\n        },\n        {\n          \"expr\": \"max by (server)\
+    \ (minio_node_file_descriptor_limit_total{job=\\\"minio-hl\\\"})\",\n        \
+    \  \"legendFormat\": \"Limit - {{server}}\",\n          \"refId\": \"B\"\n   \
+    \     }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n       \
+    \   \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n   \
+    \   \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 30,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"MinIO Metrics Target\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 60,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"up{namespace=\\\"minio\\\",job=\\\"minio-hl\\\"}\",\n \
+    \         \"legendFormat\": \"{{pod}} | {{instance}}\",\n          \"refId\":\
+    \ \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    }\n  ]\n}"

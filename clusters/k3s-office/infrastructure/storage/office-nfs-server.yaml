@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: office-nfs-server
+  namespace: office-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: office-nfs-server
+  template:
+    metadata:
+      labels:
+        app: office-nfs-server
+    spec:
+      containers:
+        - name: nfs-server
+          image: itsthenetwork/nfs-server-alpine:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: SHARED_DIRECTORY
+              value: /exports
+          ports:
+            - name: nfs
+              containerPort: 2049
+              protocol: TCP
+          volumeMounts:
+            - name: edgar
+              mountPath: /exports/edgar
+            - name: public
+              mountPath: /exports/public
+      volumes:
+        - name: edgar
+          persistentVolumeClaim:
+            claimName: edgar-pvc
+        - name: public
+          persistentVolumeClaim:
+            claimName: public-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: office-nfs-lb
+  namespace: office-storage
+spec:
+  type: LoadBalancer
+  selector:
+    app: office-nfs-server
+  ports:
+    - name: nfs
+      port: 2049
+      targetPort: 2049
+      protocol: TCP

@@ -1,0 +1,334 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-harbor-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-harbor-overview.json: "{\n  \"id\": null,\n  \"uid\": \"custom-harbor-overview\"\
+    ,\n  \"title\": \"Custom - Harbor Overview\",\n  \"tags\": [\n    \"custom\",\n\
+    \    \"harbor\",\n    \"registry\"\n  ],\n  \"timezone\": \"browser\",\n  \"schemaVersion\"\
+    : 41,\n  \"version\": 3,\n  \"refresh\": \"30s\",\n  \"time\": {\n    \"from\"\
+    : \"now-6h\",\n    \"to\": \"now\"\n  },\n  \"templating\": {\n    \"list\": [\n\
+    \      {\n        \"name\": \"DS_PROMETHEUS\",\n        \"type\": \"datasource\"\
+    ,\n        \"label\": \"Prometheus\",\n        \"query\": \"prometheus\",\n  \
+    \      \"current\": {}\n      }\n    ]\n  },\n  \"panels\": [\n    {\n      \"\
+    id\": 1,\n      \"type\": \"stat\",\n      \"title\": \"Harbor Health\",\n   \
+    \   \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n      \
+    \  \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"max(harbor_health{job=\\\"harbor\\\"})\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\",\n          \"mappings\"\
+    : [\n            {\n              \"type\": \"value\",\n              \"options\"\
+    : {\n                \"0\": {\n                  \"text\": \"UNHEALTHY\"\n   \
+    \             },\n                \"1\": {\n                  \"text\": \"HEALTHY\"\
+    \n                }\n              }\n            }\n          ],\n          \"\
+    thresholds\": {\n            \"mode\": \"absolute\",\n            \"steps\": [\n\
+    \              {\n                \"color\": \"red\",\n                \"value\"\
+    : null\n              },\n              {\n                \"color\": \"green\"\
+    ,\n                \"value\": 1\n              }\n            ]\n          },\n\
+    \          \"color\": {\n            \"mode\": \"thresholds\"\n          }\n \
+    \       },\n        \"overrides\": []\n      },\n      \"options\": {\n      \
+    \  \"reduceOptions\": {\n          \"values\": false,\n          \"calcs\": [\n\
+    \            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 2,\n      \"type\": \"stat\",\n      \"title\": \"Metrics Targets Up\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 4,\n  \
+    \      \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(up{namespace=\\\"harbor\\\",job=\\\"\
+    harbor\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 3,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Unhealthy Targets\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 8,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"count(up{namespace=\\\"harbor\\\",job=\\\"harbor\\\"} == 0) or vector(0)\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"short\",\n          \"thresholds\"\
+    : {\n            \"mode\": \"absolute\",\n            \"steps\": [\n         \
+    \     {\n                \"color\": \"green\",\n                \"value\": null\n\
+    \              },\n              {\n                \"color\": \"yellow\",\n \
+    \               \"value\": 1\n              },\n              {\n            \
+    \    \"color\": \"red\",\n                \"value\": 2\n              }\n    \
+    \        ]\n          },\n          \"color\": {\n            \"mode\": \"thresholds\"\
+    \n          }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 4,\n      \"type\": \"stat\",\n      \"title\": \"Components Up\",\n   \
+    \   \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n     \
+    \   \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum(harbor_up{job=\\\"harbor\\\"})\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 5,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Projects\",\n      \"datasource\": {\n        \"type\":\
+    \ \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 16,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"max(harbor_statistics_total_project_amount{job=\\\
+    \"harbor\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 6,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Repositories\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 20,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"max(harbor_statistics_total_repo_amount{job=\\\
+    \"harbor\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 7,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Public Projects\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"max(harbor_statistics_public_project_amount{job=\\\"harbor\\\"})\",\n    \
+    \      \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n     \
+    \   \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 8,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Private Projects\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 4,\n        \"y\": 4,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"max(harbor_statistics_private_project_amount{job=\\\"harbor\\\"})\",\n   \
+    \       \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n    \
+    \    \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 9,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Public Repositories\",\n      \"datasource\": {\n      \
+    \  \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 8,\n        \"y\": 4,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"max(harbor_statistics_public_repo_amount{job=\\\"harbor\\\"})\",\n       \
+    \   \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"\
+    defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 10,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Private Repositories\",\n      \"datasource\": {\n     \
+    \   \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 4,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"max(harbor_statistics_private_repo_amount{job=\\\"harbor\\\"})\",\n      \
+    \    \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n       \
+    \ \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n         \
+    \ \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\n  \
+    \        ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 11,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Storage Consumption\",\n      \"datasource\": {\n      \
+    \  \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 16,\n        \"y\": 4,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"max(harbor_statistics_total_storage_consumption{job=\\\"harbor\\\"})\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"bytes\",\n          \"color\":\
+    \ {\n            \"mode\": \"fixed\",\n            \"fixedColor\": \"green\"\n\
+    \          }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 12,\n      \"type\": \"stat\",\n      \"title\": \"Core Inflight Requests\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 20,\n \
+    \       \"y\": 4,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"max(harbor_core_http_inflight_requests{job=\\\
+    \"harbor\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"short\"\n        },\n    \
+    \    \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 13,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"Artifacts by Project\",\n      \"datasource\": {\n     \
+    \   \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n\
+    \      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 8,\n        \"w\": 12,\n\
+    \        \"h\": 8\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum by (project_name) (harbor_project_artifact_total{job=\\\"harbor\\\"})\"\
+    ,\n          \"legendFormat\": \"{{project_name}}\",\n          \"refId\": \"\
+    A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n\
+    \          \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 14,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Repositories by Project\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 8,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum by (project_name) (harbor_project_repo_total{job=\\\
+    \"harbor\\\"})\",\n          \"legendFormat\": \"{{project_name}}\",\n       \
+    \   \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"\
+    defaults\": {\n          \"unit\": \"short\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 15,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Project Storage Usage\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n  \
+    \      \"y\": 16,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum by (project_name) (harbor_project_quota_usage_byte{job=\\\
+    \"harbor\\\"})\",\n          \"legendFormat\": \"{{project_name}}\",\n       \
+    \   \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"\
+    defaults\": {\n          \"unit\": \"bytes\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 16,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Project Storage Quota\",\n\
+    \      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\":\
+    \ \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 16,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum by (project_name) (harbor_project_quota_byte{job=\\\
+    \"harbor\\\"})\",\n          \"legendFormat\": \"{{project_name}}\",\n       \
+    \   \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"\
+    defaults\": {\n          \"unit\": \"bytes\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 17,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Core Request Rate by Operation\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n  \
+    \      \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"sum by (operation) (rate(harbor_core_http_request_total{job=\\\
+    \"harbor\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"{{operation}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 18,\n      \"type\": \"timeseries\",\n      \"title\": \"Core HTTP\
+    \ Status Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 12,\n        \"y\": 24,\n        \"w\": 12,\n        \"h\": 8\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"sum by (code) (rate(harbor_core_http_request_total{job=\\\
+    \"harbor\\\"}[$__rate_interval]))\",\n          \"legendFormat\": \"{{code}}\"\
+    ,\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n\
+    \        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n     \
+    \     \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n     \
+    \     \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\": \"\
+    multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n  \
+    \    \"id\": 19,\n      \"type\": \"timeseries\",\n      \"title\": \"Core HTTP\
+    \ 4xx / 5xx Rate\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 0,\n        \"y\": 32,\n        \"w\": 12,\n        \"h\": 8\n  \
+    \    },\n      \"targets\": [\n        {\n          \"expr\": \"sum(rate(harbor_core_http_request_total{job=\\\
+    \"harbor\\\",code=~\\\"4..\\\"}[$__rate_interval])) or vector(0)\",\n        \
+    \  \"legendFormat\": \"4xx\",\n          \"refId\": \"A\"\n        },\n      \
+    \  {\n          \"expr\": \"sum(rate(harbor_core_http_request_total{job=\\\"harbor\\\
+    \",code=~\\\"5..\\\"}[$__rate_interval])) or vector(0)\",\n          \"legendFormat\"\
+    : \"5xx\",\n          \"refId\": \"B\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"none\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 20,\n      \"type\": \"timeseries\",\n      \"title\": \"Core Request\
+    \ P99 Latency\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 12,\n        \"y\": 32,\n        \"w\": 12,\n        \"h\": 8\n   \
+    \   },\n      \"targets\": [\n        {\n          \"expr\": \"max by (operation)\
+    \ (harbor_core_http_request_duration_seconds{job=\\\"harbor\\\",quantile=\\\"\
+    0.99\\\"})\",\n          \"legendFormat\": \"{{operation}}\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"s\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 21,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Task Queue Size\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 40,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum by (type) (harbor_task_queue_size{job=\\\"harbor\\\"\
+    })\",\n          \"legendFormat\": \"{{type}}\",\n          \"refId\": \"A\"\n\
+    \        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n    \
+    \      \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 22,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Task Queue Latency\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 40,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"max by (type) (harbor_task_queue_latency{job=\\\"harbor\\\
+    \"})\",\n          \"legendFormat\": \"{{type}}\",\n          \"refId\": \"A\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"s\"\n        },\n        \"overrides\": []\n      },\n   \
+    \   \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 23,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Task Concurrency\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 48,\n     \
+    \   \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum by (type) (harbor_task_concurrency{job=\\\"harbor\\\
+    \"})\",\n          \"legendFormat\": \"{{type}}\",\n          \"refId\": \"A\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 24,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Scheduled Tasks\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 48,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"sum(rate(harbor_task_scheduled_total{job=\\\"harbor\\\"\
+    }[$__rate_interval]))\",\n          \"legendFormat\": \"Scheduled\",\n       \
+    \   \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"\
+    defaults\": {\n          \"unit\": \"ops\"\n        },\n        \"overrides\"\
+    : []\n      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"calcs\": []\n \
+    \       },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n         \
+    \ \"sort\": \"none\"\n        }\n      }\n    },\n    {\n      \"id\": 25,\n \
+    \     \"type\": \"timeseries\",\n      \"title\": \"Harbor Component Health\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 0,\n  \
+    \      \"y\": 56,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"harbor_up{job=\\\"harbor\\\"}\",\n     \
+    \     \"legendFormat\": \"{{component}}\",\n          \"refId\": \"A\"\n     \
+    \   }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n         \
+    \ \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n     \
+    \ \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\",\n\
+    \          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n \
+    \       \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    },\n    {\n      \"id\": 26,\n      \"type\":\
+    \ \"timeseries\",\n      \"title\": \"Harbor Metrics Targets\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 12,\n        \"y\": 56,\n    \
+    \    \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\": [\n        {\n\
+    \          \"expr\": \"up{namespace=\\\"harbor\\\",job=\\\"harbor\\\"}\",\n  \
+    \        \"legendFormat\": \"{{service}} | {{pod}}\",\n          \"refId\": \"\
+    A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n\
+    \          \"unit\": \"short\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"list\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": []\n        },\n\
+    \        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"\
+    none\"\n        }\n      }\n    }\n  ]\n}"

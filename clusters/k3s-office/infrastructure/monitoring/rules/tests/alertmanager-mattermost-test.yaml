@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alertmanager-mattermost-test
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: alertmanager-mattermost-test
+      rules:
+        - alert: AlertmanagerMattermostTest
+          expr: vector(0) == 1
+          for: 30s
+          labels:
+            severity: warning
+            test: "true"
+          annotations:
+            summary: "Alertmanager Mattermost integration test"
+            description: "Temporary test for FIRING and RESOLVED Mattermost notifications."

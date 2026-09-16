@@ -1,0 +1,24 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  annotations:
+    objectset.rio.cattle.io/applied: H4sIAAAAAAAA/4SRvU4rMRCFX2U19Sb3JpA/SxSQBglqKpqxPZs1651Z2ZNFUZR3RwYhJUVI6bHP5290joBDeKOUgzAYaCn2U4eqkaZB/o0zqKEL7MHAM8V+22LSrXATdlBDT4oeFcEcAZlFUYNwLkexH+Q0k05TkDNgKCSor97LJ1Oa7MYODHR3+UKlrl4C+4dH74VvIhh7AgOakJrQTdyv8+1UHtCVaLe3NMmHrNTDqYaIluKfu7WYWzCAdr1aOPLNDFfrOf13uNws3QY3djFr7HzlscGG7n2BXlrCz+CKQB7Ile9HjHvKW2ElVjCQKY3BkXnnqtLDQKZ6FfRPGJEdpTI96+b7VVWV5mK0xToKejidvgIAAP//jCiPYwgCAAA
+    objectset.rio.cattle.io/id: ""
+    objectset.rio.cattle.io/owner-gvk: k3s.cattle.io/v1, Kind=Addon
+    objectset.rio.cattle.io/owner-name: traefik-config
+    objectset.rio.cattle.io/owner-namespace: kube-system
+  creationTimestamp: "2026-09-07T02:42:19Z"
+  generation: 1
+  labels:
+    objectset.rio.cattle.io/hash: ab875cedf1a782e0ca696c9a9b51fb27dafafe4d
+  name: traefik
+  namespace: kube-system
+  resourceVersion: "32993610"
+  uid: a71afa96-2897-49f8-b01b-c972c176b4b0
+spec:
+  failurePolicy: reinstall
+  valuesContent: |-
+    service:
+      type: LoadBalancer
+      annotations:
+        metallb.io/loadBalancerIPs: "192.168.13.216"

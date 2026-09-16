@@ -1,0 +1,121 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: juicefs-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: juicefs.rules
+      rules:
+        - alert: JuiceFSSpaceUsageHigh
+          expr: |
+            (
+              100 * juicefs_used_space{job=~".*juicefs-mount"}
+              / juicefs_total_space{job=~".*juicefs-mount"}
+            ) > 80
+            and
+            (
+              100 * juicefs_used_space{job=~".*juicefs-mount"}
+              / juicefs_total_space{job=~".*juicefs-mount"}
+            ) <= 90
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "JuiceFS 存储空间使用率较高"
+            description: "JuiceFS 卷 {{ $labels.vol_name }} 的挂载 {{ $labels.mp }} 空间使用率已超过 80%，当前约为 {{ printf \"%.1f\" $value }}%。"
+
+        - alert: JuiceFSSpaceUsageCritical
+          expr: |
+            (
+              100 * juicefs_used_space{job=~".*juicefs-mount"}
+              / juicefs_total_space{job=~".*juicefs-mount"}
+            ) > 90
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "JuiceFS 存储空间即将耗尽"
+            description: "JuiceFS 卷 {{ $labels.vol_name }} 的挂载 {{ $labels.mp }} 空间使用率已超过 90%，当前约为 {{ printf \"%.1f\" $value }}%，请尽快清理数据或扩容。"
+
+        - alert: JuiceFSInodeUsageHigh
+          expr: |
+            (
+              100 * juicefs_used_inodes{job=~".*juicefs-mount"}
+              / juicefs_total_inodes{job=~".*juicefs-mount"}
+            ) > 80
+            and
+            (
+              100 * juicefs_used_inodes{job=~".*juicefs-mount"}
+              / juicefs_total_inodes{job=~".*juicefs-mount"}
+            ) <= 90
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "JuiceFS inode 使用率较高"
+            description: "JuiceFS 卷 {{ $labels.vol_name }} 的挂载 {{ $labels.mp }} inode 使用率已超过 80%，当前约为 {{ printf \"%.1f\" $value }}%。"
+
+        - alert: JuiceFSInodeUsageCritical
+          expr: |
+            (
+              100 * juicefs_used_inodes{job=~".*juicefs-mount"}
+              / juicefs_total_inodes{job=~".*juicefs-mount"}
+            ) > 90
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "JuiceFS inode 即将耗尽"
+            description: "JuiceFS 卷 {{ $labels.vol_name }} 的挂载 {{ $labels.mp }} inode 使用率已超过 90%，当前约为 {{ printf \"%.1f\" $value }}%。"
+
+        - alert: JuiceFSFuseIOErrorsDetected
+          expr: increase(juicefs_fuse_ops_io_errors{job=~".*juicefs-mount",errno!="ENOENT"}[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "JuiceFS FUSE 出现新的 I/O 错误"
+            description: "JuiceFS 卷 {{ $labels.vol_name }} 的挂载 {{ $labels.mp }} 在最近 10 分钟出现新的 FUSE 错误。errno={{ $labels.errno }}，新增错误数约为 {{ $value }}。"
+
+        - alert: JuiceFSObjectStoreErrorsDetected
+          expr: increase(juicefs_object_request_errors{job=~".*juicefs-mount"}[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "JuiceFS 对象存储请求出现错误"
+            description: "JuiceFS 卷 {{ $labels.vol_name }} 的挂载 {{ $labels.mp }} 在最近 10 分钟出现新的对象存储请求错误，新增错误数约为 {{ $value }}。"
+
+        - alert: JuiceFSProvisionErrorsDetected
+          expr: increase(juicefs_provision_errors{job=~".*juicefs-csi"}[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "JuiceFS CSI Provision 出现错误"
+            description: "JuiceFS CSI Pod {{ $labels.pod }} 在最近 10 分钟出现新的 Provision 错误，新增错误数约为 {{ $value }}。"
+
+        - alert: JuiceFSVolumeErrorsDetected
+          expr: increase(juicefs_volume_errors{job=~".*juicefs-csi"}[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "JuiceFS CSI Volume 出现错误"
+            description: "JuiceFS CSI Pod {{ $labels.pod }} 在最近 10 分钟出现新的 Volume 错误，新增错误数约为 {{ $value }}。"
+
+        - alert: JuiceFSStagingErrorsDetected
+          expr: increase(juicefs_staging_block_errors{job=~".*juicefs-mount"}[10m]) > 0
+          labels:
+            severity: warning
+          annotations:
+            summary: "JuiceFS 数据 Staging 出现错误"
+            description: "JuiceFS 卷 {{ $labels.vol_name }} 的挂载 {{ $labels.mp }} 在最近 10 分钟出现新的 Staging Block 错误，新增错误数约为 {{ $value }}。"
+
+        - alert: JuiceFSVolumePathUnhealthy
+          expr: juicefs_volume_path_health == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "JuiceFS Volume 挂载路径异常"
+            description: "节点 {{ $labels.node_name }} 上的 JuiceFS Volume {{ $labels.volume_id }} 挂载路径已连续 5 分钟不健康。路径：{{ $labels.volume_path }}。"

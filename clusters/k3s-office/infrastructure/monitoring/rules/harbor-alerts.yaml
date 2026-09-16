@@ -1,0 +1,81 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: harbor-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: harbor.rules
+      rules:
+        - alert: HarborComponentDown
+          expr: harbor_up == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Harbor 组件不可用"
+            description: "Harbor 组件 {{ $labels.component }} 已连续 5 分钟不可用。命名空间：{{ $labels.namespace }}。"
+
+        - alert: HarborHealthCheckFailed
+          expr: harbor_health == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Harbor 整体健康检查失败"
+            description: "Harbor 整体健康状态已连续 5 分钟异常，请检查 Harbor Core、Database、Redis、Registry、Jobservice 等组件状态。"
+
+        - alert: HarborTaskQueueHigh
+          expr: harbor_task_queue_size > 100
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Harbor 任务队列积压"
+            description: "Harbor 任务队列 {{ $labels.type }} 已连续 10 分钟超过 100 个待处理任务，当前队列长度约 {{ $value }}。"
+
+        - alert: HarborTaskQueueLatencyHigh
+          expr: harbor_task_queue_latency > 300
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Harbor 任务队列等待时间过长"
+            description: "Harbor 任务类型 {{ $labels.type }} 的队首任务已等待超过 300 秒，当前等待时间约 {{ $value }} 秒。"
+
+        - alert: HarborProjectQuotaUsageHigh
+          expr: |
+            (
+              100 * harbor_project_quota_usage_byte
+              / harbor_project_quota_byte
+            ) > 80
+            and
+            (
+              100 * harbor_project_quota_usage_byte
+              / harbor_project_quota_byte
+            ) <= 90
+            and
+            harbor_project_quota_byte > 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Harbor 项目存储配额使用率较高"
+            description: "Harbor 项目 {{ $labels.project_name }} 的存储配额使用率已超过 80%，当前约为 {{ printf \"%.1f\" $value }}%。"
+
+        - alert: HarborProjectQuotaUsageCritical
+          expr: |
+            (
+              100 * harbor_project_quota_usage_byte
+              / harbor_project_quota_byte
+            ) > 90
+            and
+            harbor_project_quota_byte > 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Harbor 项目存储配额即将耗尽"
+            description: "Harbor 项目 {{ $labels.project_name }} 的存储配额使用率已超过 90%，当前约为 {{ printf \"%.1f\" $value }}%，请尽快清理镜像或扩容配额。"

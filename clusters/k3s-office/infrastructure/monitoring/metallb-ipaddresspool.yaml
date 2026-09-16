@@ -1,0 +1,23 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: seaweedfs-manual-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.168.13.210/32
+    - 192.168.13.211/32
+    - 192.168.13.212/32
+    - 192.168.13.213/32
+    - 192.168.13.214/32
+    - 192.168.13.215/32
+    - 192.168.13.216/32
+    - 192.168.13.217/32
+    - 192.168.13.218/32
+    - 192.168.13.219/32
+    - 192.168.13.220/32
+    - 192.168.13.221/32
+    - 192.168.13.223/32
+    - 192.168.13.224/32
+  autoAssign: true
+  avoidBuggyIPs: false

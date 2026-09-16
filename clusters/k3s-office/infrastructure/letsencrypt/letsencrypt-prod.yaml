@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-alidns-prod
+spec:
+  acme:
+    email: heilvqishi@outlook.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-alidns-prod-account-key
+    solvers:
+      - dns01:
+          webhook:
+            groupName: alidns.crazygit.github.io
+            solverName: alidns

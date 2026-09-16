@@ -1,0 +1,155 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-custom-office-switch-overview
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+data:
+  custom-office-switch-overview.json: "{\n  \"annotations\": {\n    \"list\": []\n\
+    \  },\n  \"editable\": false,\n  \"graphTooltip\": 1,\n  \"id\": null,\n  \"links\"\
+    : [],\n  \"liveNow\": false,\n  \"panels\": [\n    {\n      \"id\": 1,\n     \
+    \ \"type\": \"stat\",\n      \"title\": \"SNMP Target\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n\
+    \      },\n      \"gridPos\": {\n        \"x\": 0,\n        \"y\": 0,\n      \
+    \  \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\": [\n        {\n  \
+    \        \"expr\": \"max(up{job=\\\"snmp-exporter-prometheus-snmp-exporter\\\"\
+    ,target=\\\"spine04\\\"})\",\n          \"refId\": \"A\"\n        }\n      ],\n\
+    \      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"short\"\
+    ,\n          \"mappings\": [\n            {\n              \"type\": \"value\"\
+    ,\n              \"options\": {\n                \"0\": {\n                  \"\
+    text\": \"DOWN\"\n                },\n                \"1\": {\n             \
+    \     \"text\": \"UP\"\n                }\n              }\n            }\n  \
+    \        ]\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"reduceOptions\": {\n          \"values\": false,\n          \"\
+    calcs\": [\n            \"lastNotNull\"\n          ]\n        },\n        \"orientation\"\
+    : \"auto\",\n        \"textMode\": \"auto\"\n      }\n    },\n    {\n      \"\
+    id\": 2,\n      \"type\": \"stat\",\n      \"title\": \"Physical Ports\",\n  \
+    \    \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    ${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 4,\n      \
+    \  \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"count(ifOperStatus{target=\\\"spine04\\\"\
+    ,ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"})\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"short\"\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"reduceOptions\": {\n          \"values\"\
+    : false,\n          \"calcs\": [\n            \"lastNotNull\"\n          ]\n \
+    \       },\n        \"orientation\": \"auto\",\n        \"textMode\": \"auto\"\
+    \n      }\n    },\n    {\n      \"id\": 3,\n      \"type\": \"stat\",\n      \"\
+    title\": \"Ports UP\",\n      \"datasource\": {\n        \"type\": \"prometheus\"\
+    ,\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n   \
+    \     \"x\": 8,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\": 4\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"count(ifOperStatus{target=\\\
+    \"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"} == 1)\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 4,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Ports DOWN\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 12,\n        \"y\": 0,\n        \"w\": 4,\n        \"h\":\
+    \ 4\n      },\n      \"targets\": [\n        {\n          \"expr\": \"count(ifOperStatus{target=\\\
+    \"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"} == 2)\",\n\
+    \          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n \
+    \       \"defaults\": {\n          \"unit\": \"short\"\n        },\n        \"\
+    overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\": {\n\
+    \          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 5,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"RX Errors / sec\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 16,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(rate(ifInErrors{target=\\\"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\
+    \"}[5m]))\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 6,\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"TX Errors / sec\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 20,\n        \"y\": 0,\n        \"w\": 4,\n\
+    \        \"h\": 4\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"sum(rate(ifOutErrors{target=\\\"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\
+    \"}[5m]))\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"ops\"\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"values\": false,\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ]\n        },\n        \"orientation\": \"auto\",\n        \"textMode\"\
+    : \"auto\"\n      }\n    },\n    {\n      \"id\": 7,\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"Interface Traffic\",\n      \"datasource\": {\n        \"\
+    type\": \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n   \
+    \   \"gridPos\": {\n        \"x\": 0,\n        \"y\": 4,\n        \"w\": 12,\n\
+    \        \"h\": 9\n      },\n      \"targets\": [\n        {\n          \"expr\"\
+    : \"rate(ifHCInOctets{target=\\\"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\
+    \"}[5m]) * 8 / 1000000\",\n          \"refId\": \"A\",\n          \"legendFormat\"\
+    : \"RX {{ifName}}\"\n        },\n        {\n          \"expr\": \"rate(ifHCOutOctets{target=\\\
+    \"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ 1000000\",\n          \"refId\": \"B\",\n          \"legendFormat\": \"TX {{ifName}}\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"Mbps\"\n        },\n        \"overrides\": []\n      },\n\
+    \      \"options\": {\n        \"legend\": {\n          \"displayMode\": \"table\"\
+    ,\n          \"placement\": \"bottom\",\n          \"calcs\": [\n            \"\
+    lastNotNull\"\n          ]\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"desc\"\n        }\n      }\n    },\n    {\n\
+    \      \"id\": 8,\n      \"type\": \"timeseries\",\n      \"title\": \"Interface\
+    \ Utilization\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n\
+    \        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n     \
+    \   \"x\": 12,\n        \"y\": 4,\n        \"w\": 12,\n        \"h\": 9\n    \
+    \  },\n      \"targets\": [\n        {\n          \"expr\": \"100 * rate(ifHCInOctets{target=\\\
+    \"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ (ifHighSpeed{target=\\\"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\
+    \"} * 1000000)\",\n          \"refId\": \"A\",\n          \"legendFormat\": \"\
+    RX {{ifName}}\"\n        },\n        {\n          \"expr\": \"100 * rate(ifHCOutOctets{target=\\\
+    \"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"}[5m]) * 8 /\
+    \ (ifHighSpeed{target=\\\"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\
+    \"} * 1000000)\",\n          \"refId\": \"B\",\n          \"legendFormat\": \"\
+    TX {{ifName}}\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\"\
+    : {\n          \"unit\": \"percent\"\n        },\n        \"overrides\": []\n\
+    \      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"table\",\n          \"placement\": \"bottom\",\n          \"calcs\": [\n \
+    \           \"lastNotNull\"\n          ]\n        },\n        \"tooltip\": {\n\
+    \          \"mode\": \"multi\",\n          \"sort\": \"desc\"\n        }\n   \
+    \   }\n    },\n    {\n      \"id\": 9,\n      \"type\": \"timeseries\",\n    \
+    \  \"title\": \"Interface Errors\",\n      \"datasource\": {\n        \"type\"\
+    : \"prometheus\",\n        \"uid\": \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\"\
+    : {\n        \"x\": 0,\n        \"y\": 13,\n        \"w\": 12,\n        \"h\"\
+    : 8\n      },\n      \"targets\": [\n        {\n          \"expr\": \"rate(ifInErrors{target=\\\
+    \"spine04\\\",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"}[5m])\",\n\
+    \          \"refId\": \"A\",\n          \"legendFormat\": \"RX {{ifName}}\"\n\
+    \        },\n        {\n          \"expr\": \"rate(ifOutErrors{target=\\\"spine04\\\
+    \",ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"}[5m])\",\n          \"\
+    refId\": \"B\",\n          \"legendFormat\": \"TX {{ifName}}\"\n        }\n  \
+    \    ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\"\
+    : \"ops\"\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"legend\": {\n          \"displayMode\": \"table\",\n          \"\
+    placement\": \"bottom\",\n          \"calcs\": [\n            \"lastNotNull\"\n\
+    \          ]\n        },\n        \"tooltip\": {\n          \"mode\": \"multi\"\
+    ,\n          \"sort\": \"desc\"\n        }\n      }\n    },\n    {\n      \"id\"\
+    : 10,\n      \"type\": \"timeseries\",\n      \"title\": \"Interface Discards\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"${DS_PROMETHEUS}\"\n      },\n      \"gridPos\": {\n        \"x\": 12,\n \
+    \       \"y\": 13,\n        \"w\": 12,\n        \"h\": 8\n      },\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"rate(ifInDiscards{target=\\\"spine04\\\"\
+    ,ifName=~\\\"(GigabitEthernet|XGigabitEthernet).*\\\"}[5m])\",\n          \"refId\"\
+    : \"A\",\n          \"legendFormat\": \"RX {{ifName}}\"\n        },\n        {\n\
+    \          \"expr\": \"rate(ifOutDiscards{target=\\\"spine04\\\",ifName=~\\\"\
+    (GigabitEthernet|XGigabitEthernet).*\\\"}[5m])\",\n          \"refId\": \"B\"\
+    ,\n          \"legendFormat\": \"TX {{ifName}}\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"ops\"\n     \
+    \   },\n        \"overrides\": []\n      },\n      \"options\": {\n        \"\
+    legend\": {\n          \"displayMode\": \"table\",\n          \"placement\": \"\
+    bottom\",\n          \"calcs\": [\n            \"lastNotNull\"\n          ]\n\
+    \        },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n        \
+    \  \"sort\": \"desc\"\n        }\n      }\n    }\n  ],\n  \"refresh\": \"30s\"\
+    ,\n  \"schemaVersion\": 41,\n  \"tags\": [\n    \"custom\",\n    \"network\",\n\
+    \    \"snmp\"\n  ],\n  \"templating\": {\n    \"list\": [\n      {\n        \"\
+    name\": \"DS_PROMETHEUS\",\n        \"type\": \"datasource\",\n        \"label\"\
+    : \"Prometheus\",\n        \"query\": \"prometheus\",\n        \"current\": {},\n\
+    \        \"hide\": 0,\n        \"refresh\": 1\n      }\n    ]\n  },\n  \"time\"\
+    : {\n    \"from\": \"now-6h\",\n    \"to\": \"now\"\n  },\n  \"timezone\": \"\
+    browser\",\n  \"title\": \"Custom - Office Switch Overview\",\n  \"uid\": \"custom-office-switch-overview\"\
+    ,\n  \"version\": 1\n}"
