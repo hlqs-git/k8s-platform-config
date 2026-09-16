@@ -9,6 +9,13 @@ rules:
     resources:
       - pods
       - pods/log
+      - pods/exec
+      - pods/portforward
+      - jobs
+      - cronjobs
+      - secrets
+      - persistentvolumeclaims
+      - events
       - services
       - configmaps
     verbs:
