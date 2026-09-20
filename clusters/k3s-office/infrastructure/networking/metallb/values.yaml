@@ -1,0 +1,7 @@
+# k3s-office 使用 MetalLB native 模式，不部署 FRR 或 FRR-K8s。
+speaker:
+  frr:
+    enabled: false
+
+frrk8s:
+  enabled: false

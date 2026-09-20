@@ -11,13 +11,14 @@
 | K3s/Kubernetes 版本 | 待填写 |
 | 节点与角色 | 待填写 |
 | API Server 地址 | 待填写；不要提交带凭据的 kubeconfig |
-| 默认 StorageClass | 待填写 |
-| Ingress Controller | 待填写 |
+| 默认 StorageClass | Longhorn |
+| Ingress Controller | K3s Traefik |
 | 集群域名/入口域名 | 待填写 |
 | 维护负责人 | 待填写 |
 
 ## 目录职责
 
+- `infrastructure/networking/`：CoreDNS 高可用设置、MetalLB 地址池和 L2 网络配置。
 - `infrastructure/ingress/`：Ingress Controller、入口规则和证书引用。
 - `infrastructure/observability/`：指标、日志、链路追踪和告警规则。
 - `infrastructure/storage/`：StorageClass、CSI 或本地存储配置。
@@ -30,12 +31,13 @@ K3s 自带组件的启用/禁用参数放在 `bootstrap/k3s/config/`，其安装
 ## 推荐部署顺序
 
 1. 使用 `bootstrap/k3s/` 完成集群安装和节点配置。
-2. 应用 `policies/` 中的治理资源。
-3. 配置 `infrastructure/storage/`。
-4. 配置 `infrastructure/ingress/` 和证书能力。
-5. 部署 `infrastructure/observability/`。
-6. 部署 `infrastructure/registry/`。
-7. 部署 `apps/`。
+2. 配置 `infrastructure/networking/`，并确认 CoreDNS、MetalLB 和入口地址正常。
+3. 应用 `policies/` 中的治理资源。
+4. 配置 `infrastructure/storage/`。
+5. 配置 `infrastructure/ingress/` 和证书能力。
+6. 部署 `infrastructure/observability/`。
+7. 部署 `infrastructure/registry/`。
+8. 部署 `apps/`。
 
 ## 变更注意事项
 

@@ -1,0 +1,24 @@
+# Longhorn 1.12.1 on the three-node k3s-office cluster.
+# V1 Data Engine stores data on the dedicated ext4 filesystem mounted at
+# /var/lib/longhorn on every node.
+persistence:
+  createStorageClass: true
+  defaultClass: true
+  defaultFsType: ext4
+  defaultClassReplicaCount: 2
+  defaultDataLocality: disabled
+  reclaimPolicy: Delete
+  volumeBindingMode: "Immediate"
+  migratable: false
+  disableRevisionCounter: "true"
+
+defaultSettings:
+  defaultDataPath: /var/lib/longhorn
+  replicaSoftAntiAffinity: false
+  replicaAutoBalance: least-effort
+  storageOverProvisioningPercentage: 100
+  storageMinimalAvailablePercentage: 10
+  defaultReplicaCount: 2
+  allowVolumeCreationWithDegradedAvailability: false
+  v1DataEngine: true
+  v2DataEngine: false
